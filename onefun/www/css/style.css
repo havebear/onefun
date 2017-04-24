@@ -1,0 +1,73 @@
+/* Empty. Add your own CSS if you like */
+
+.bgg-tab-color-none{background: #FFF;border: none;}
+.bgg-bar-top{background: #FFF;border: none;}
+.bgg-bar-bottom{background: #FFFFFF;/*border-top: 1px solid #333;*/}
+.bar.bar-stable{background: none;}
+.tabs{background: none;}
+.tab-item .icon{font-size:30px;padding: 0;margin: 0;line-height: 32px;}
+.bgg-home-grid-menu a{text-decoration: none;}
+/*.bgg-tabs-color-active{color: #ed7111 !important;}*/
+.bgg-nav-right-icon:before{font-size: 24px !important;}
+
+.col-25{/*border: 1px solid #ddd;height: 120px;*/padding: 0.5rem 0;display:flex;justify-content:center;align-items: center;}  
+.col-25 img {height: 40px; width: 40px;}  
+.col-25 ul li img {height: 40px; width: 40px;margin-top: 12px}  
+.col-25 ul li p {text-align: center;color: #444;font-size: 12px;}
+.col-25 ul li i{font-size: 32px;color: #333;}
+
+.col-offset-2{margin-left: 2%;}
+.col-2{-webkit-box-flex: 0;-webkit-flex: 0 0 2%;-moz-box-flex: 0;-moz-flex: 0 0 2%;-ms-flex: 0 0 48%;flex: 0 0 2%;}
+.col-4{-webkit-box-flex: 0;-webkit-flex: 0 0 4%;-moz-box-flex: 0;-moz-flex: 0 0 4%;-ms-flex: 0 0 4%;flex: 0 0 4%;}
+.col-48{-webkit-box-flex: 0;-webkit-flex: 0 0 48%;-moz-box-flex: 0;-moz-flex: 0 0 48%;-ms-flex: 0 0 48%;flex: 0 0 48%;}
+.col-49{-webkit-box-flex: 0;-webkit-flex: 0 0 49%;-moz-box-flex: 0;-moz-flex: 0 0 49%;-ms-flex: 0 0 48%;flex: 0 0 49%;}
+
+.bgg-title-text{padding: 10px 0;margin: 0;color: #999;}
+
+.bgg-home-hot-friend{padding: 0;}
+.bgg-home-hot-button,.bgg-home-friend-button{padding: 0;background: #333;color: #FFF;font-size: 1rem;height: 3rem;line-height: 3rem;border: none;text-decoration: none;}
+.bgg-home-hot-friend img{width:100% !important;opacity: 0.9;}
+
+.bgg-tutorial-list-box{/*padding-top: 20px;*/}
+.bgg-tutorial-list-item{margin-top: 10px;padding-bottom: 5px;}
+.bgg-tutorial-list-box .bgg-tutorial-list-item:nth-child(1){margin-top: 0;}
+.bgg-tutorial-list-item a{display:block;text-decoration: none;}
+.bgg-tutorial-list-item h4{font-size: 18px;margin: 5px 0;}
+.bgg-tutorial-list-box img{width: 100%;}
+.bgg-tutorial-list-item-info{height: 40px;color: #666;line-height: 40px;}
+.bgg-tutorial-list-item-info-xihuan{float: right;padding: 0 10px;padding-right: 0;}
+.bgg-tutorial-list-item-info-xihuan i{font-size: 18px;}
+
+.bgg-liuyan-list-box{}
+.bgg-liuyan-list-item{/*border-bottom: 1px solid #eee;*/margin: 10px 0;padding-bottom: 5px;}
+.bgg-liuyan-list-item-body{font-size: 16px;/*text-indent: 2em;*/}
+.bgg-liuyan-list-item-info{height: 40px;color: #666;line-height: 40px;}
+.bgg-liuyan-list-item-info-dianzan{float: right;padding: 0 10px;padding-right: 0;}
+.bgg-liuyan-list-item-info-dianzan i{font-size: 18px;}
+
+.bgg-personal-info{padding: 20px 0;border-bottom: 10px solid #fafafa;}
+.bgg-personal-info p{color: #999;}
+.bgg-personal-model{border-bottom: 10px solid #fafafa;}
+.bgg-personal-model a{text-decoration: none;}
+.bgg-personal-model p{color: #999;}
+.bgg-personal-list-box{padding: 10px;}
+.bgg-personal-list-item{display: block;text-decoration: none;padding-bottom: 10px;}
+.bgg-personal-list-item p{color: #666666;}
+
+.bgg-detail-title img{width: 100%;}
+.bgg-detail-title h3,.bgg-detail-title p{padding-left: 10px;padding-right: 10px;}
+.bgg-detail-box{padding: 10px;}
+.bgg-detail-buzhou img{width: 100%;}
+.bgg-detail-buzhou p{font-size: 16px;line-height: 28px;}
+
+.bgg-guanzhu-list-item{padding: 2px 0;}
+.bgg-qxgz{float: right;/*font-size: 12px;*/color: #666;}
+
+.bgg-form-box{}
+.bgg-form-input{border: none;}
+.bgg-form-input input{font-size: 20px;color: #333;font-weight: 500;}
+.bgg-form-input:placeholder{font-size: 16px;}
+.bgg-form-subbtn{background: #333;border: none;color: #FFF;}
+.bgg-form-subbtn:hover{background: #222;color: #FFF;}
+.bgg-form-subbtn:active{background: #222;color: #FFF;}
+.bgg-form-subbtn:visited{background: #222;color: #FFF;}

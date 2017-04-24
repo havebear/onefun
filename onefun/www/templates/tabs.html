@@ -1,0 +1,30 @@
+<!--
+Create tabs with an icon and label, using the tabs-positive style.
+Each tab's child <ion-nav-view> directive will have its own
+navigation history that also transitions its views in and out.
+-->
+<!--<ion-tabs class="tabs-icon-top tabs-color-active-positive bgg-bar-bottom">-->
+<ion-tabs class="tabs-icon-top bgg-tabs-color-active bgg-bar-bottom" ng-class="{'tabs-item-hide': $root.hideTabs}">
+
+  <!-- Dashboard Tab -->
+  <ion-tab title="一坊" icon-off="iconfont icon-shouyefill" icon-on="iconfont icon-shouyefill" href="#/tab/home">
+    <ion-nav-view name="tab-home"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Chats Tab -->
+  <ion-tab title="留言" icon-off="iconfont icon-liuyanfill" icon-on="iconfont icon-liuyanfill" href="#/tab/liuyan">
+    <ion-nav-view name="tab-liuyan"></ion-nav-view>
+     <!--<ion-nav-bar>
+		    <ion-nav-buttons side="right">
+		        <i class="iconfont icon-jiahao1"></i>
+		    </ion-nav-buttons>
+		</ion-nav-bar>-->
+  </ion-tab>
+
+  <!-- Account Tab -->
+  <ion-tab title="我" icon-off="iconfont icon-yonghufill" icon-on="iconfont icon-yonghufill" href="#/tab/personal">
+    <ion-nav-view name="tab-personal"></ion-nav-view>
+  </ion-tab>
+
+
+</ion-tabs>

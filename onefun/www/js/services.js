@@ -1,0 +1,72 @@
+angular.module('starter.services', [])
+
+//次级页面隐藏底部tabs
+.directive('hideTabs', function($rootScope) {  
+  return {  
+    restrict: 'A',  
+    link: function(scope, element, attributes) {  
+      scope.$on('$ionicView.beforeEnter', function() {  
+        scope.$watch(attributes.hideTabs, function(value){  
+          $rootScope.hideTabs = 'tabs-item-hide';  
+        });  
+      });  
+      scope.$on('$ionicView.beforeLeave', function() {  
+        scope.$watch(attributes.hideTabs, function(value){  
+          $rootScope.hideTabs = 'tabs-item-hide';  
+        });  
+        scope.$watch('$destroy',function(){  
+          $rootScope.hideTabs = false;  
+        })  
+      });  
+    }  
+  };  
+})
+
+.factory('LiuYans', function() {
+  // Might use a resource here that returns a JSON array
+
+  // Some fake testing data
+  var chats = [{
+    id: 0,
+    name: 'Ben Sparrow',
+    lastText: 'You on your way?',
+    face: 'img/ben.png'
+  }, {
+    id: 1,
+    name: 'Max Lynx',
+    lastText: 'Hey, it\'s me',
+    face: 'img/max.png'
+  }, {
+    id: 2,
+    name: 'Adam Bradleyson',
+    lastText: 'I should buy a boat',
+    face: 'img/adam.jpg'
+  }, {
+    id: 3,
+    name: 'Perry Governor',
+    lastText: 'Look at my mukluks!',
+    face: 'img/perry.png'
+  }, {
+    id: 4,
+    name: 'Mike Harrington',
+    lastText: 'This is wicked good ice cream.',
+    face: 'img/mike.png'
+  }];
+
+  return {
+    all: function() {
+      return chats;
+    },
+    remove: function(chat) {
+      chats.splice(chats.indexOf(chat), 1);
+    },
+    get: function(chatId) {
+      for (var i = 0; i < chats.length; i++) {
+        if (chats[i].id === parseInt(chatId)) {
+          return chats[i];
+        }
+      }
+      return null;
+    }
+  };
+});

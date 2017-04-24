@@ -1,0 +1,14 @@
+<ion-view view-title="登录" hide-tabs="true">
+  <ion-content class="padding">
+  	<form class="bgg-form-box">
+		<label class="item item-input bgg-form-input">
+	        <input class="text-center" type="text" placeholder="用户名" name="name" ng-model="formData.name">
+      	</label>
+		<label class="item item-input bgg-form-input">
+        	<input class="text-center" type="password" placeholder="密码" name="pwd" ng-model="formData.pwd">
+        </label>
+	</form>
+	<button class="button button-block bgg-form-subbtn" ng-click="login()">登录</button>
+	<a ui-sref="tab.reg" id="page1-button2" class="button button-light  button-block">注册</a>
+  </ion-content>
+</ion-view>
