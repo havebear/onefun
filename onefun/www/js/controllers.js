@@ -1,7 +1,13 @@
 angular.module('starter.controllers', [])
 
-.controller('HomeCtrl', function($scope) {
+.controller('HomeCtrl', function($scope, $http) {
 	$scope.a = function() {alert(1)};
+	getProductList();
+	function getProductList(){
+		$http.get("http://localhost:3000/getCourse").then(function (response) {
+			$scope.courses = response.data;
+		});
+	}
 })
 
 //.controller('LiuYanCtrl', function($scope, LiuYan) {
