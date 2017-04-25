@@ -8,6 +8,8 @@ angular.module('starter.controllers', [])
 			$scope.courses = response.data;
 		});
 	}
+	//收藏图标默认是未收藏
+	$scope.isActive = true;
 })
 
 //.controller('LiuYanCtrl', function($scope, LiuYan) {
@@ -41,6 +43,15 @@ angular.module('starter.controllers', [])
 })
 
 .controller('DetailCtrl', function($scope,$state,$stateParams,$ionicViewSwitcher) {
+	//接受数据，是否收藏
+	$scope.isActive = true;
+	$scope.shoucang = function(){
+		if($scope.isActive){
+			$scope.isActive = false;
+		}else{
+			$scope.isActive = true;
+		}
+	}
 	//同级解决次级页面出现底部tab方案
 //	$scope.backNav = function() {
 //	  console.log($scope.historyBack);
@@ -55,20 +66,68 @@ angular.module('starter.controllers', [])
 	$scope.pagetitle = types[type];
 })
 
-.controller('MyGuanZhuCtrl', function($scope) {
+.controller('MyGuanZhuCtrl', function($scope, $ionicPopup, $timeout) {
+	$scope.showConfirm = function(name,id) {
+	   var confirmPopup = $ionicPopup.confirm({
+	     title: '一坊',
+	     template: '是否取消关注' + name + '?',
+	     cancelText:'返回',
+	     okText:'确定',
+	     okType:'button-dark'
+	   });
 	
+	   confirmPopup.then(function(res) {
+	     if(res) {
+	       console.log('You are sure');
+	     } else {
+	       console.log('You are not sure');
+	     }
+	   });
+	 };
 })
 
-.controller('MyLiuYanCtrl', function($scope) {
+.controller('MyLiuYanCtrl', function($scope, $ionicPopup, $timeout) {
+	$scope.deleteLiuyan = function(){
+		var confirmPopup = $ionicPopup.confirm({
+	     title: '一坊',
+	     template: '确认删除',
+	     cancelText:'取消',
+	     okText:'确定',
+	     okType:'button-dark'
+	   });
 	
+	   confirmPopup.then(function(res) {
+	     if(res) {
+	       console.log('You are sure');
+	     } else {
+	       console.log('You are not sure');
+	     }
+	   });
+	}
 })
 
 .controller('MyShouCangCtrl', function($scope) {
 	
 })
 
-.controller('MyTDetailCtrl', function($scope) {
+.controller('MyTDetailCtrl', function($scope, $ionicPopup, $timeout) {
+	$scope.quxiao = function(){
+		var confirmPopup = $ionicPopup.confirm({
+	     title: '一坊',
+	     template: '取消收藏',
+	     cancelText:'取消',
+	     okText:'确定',
+	     okType:'button-dark'
+	   });
 	
+	   confirmPopup.then(function(res) {
+	     if(res) {
+	       console.log('You are sure');
+	     } else {
+	       console.log('You are not sure');
+	     }
+	   });
+	}
 })
 
 .controller('LoginCtrl', function($scope,$state) {
@@ -83,6 +142,30 @@ angular.module('starter.controllers', [])
 	
 })
 
-.controller('AddLiuyanCtrl', function($scope) {
+.controller('AddLiuyanCtrl', function($scope, $ionicPopup, $timeout) {
+	$scope.addLiuyan = function(){
+		var confirmPopup = $ionicPopup.confirm({
+	     title: '一坊',
+	     template: '确认发表',
+	     cancelText:'取消',
+	     okText:'确定',
+	     okType:'button-dark'
+	   });
 	
+	   confirmPopup.then(function(res) {
+	     if(res) {
+	       console.log('You are sure');
+	     } else {
+	       console.log('You are not sure');
+	     }
+	   });
+	}
+	
+//	$cordovaToast
+//  .show('Here is a message', 'long', 'center')
+//  .then(function(success) {
+//    console.log('You are sure');
+//  }, function (error) {
+//    console.log('You are not sure');
+//  });
 });

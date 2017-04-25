@@ -71,3 +71,6 @@
 .bgg-form-subbtn:hover{background: #222;color: #FFF;}
 .bgg-form-subbtn:active{background: #222;color: #FFF;}
 .bgg-form-subbtn:visited{background: #222;color: #FFF;}
+
+/*多行文本输入*/
+.textarea{width:100%;min-height: 100%;border:none;outline:none;resize:none;overflow: hidden;font-size: 18px;}
