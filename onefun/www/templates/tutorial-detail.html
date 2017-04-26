@@ -4,13 +4,13 @@
 	  <a class="button button-icon icon ion-ios-arrow-thin-left" ng-click="backNav()"></a>
 	</ion-nav-buttons>-->
 	<ion-nav-buttons side="right">
-	  <a class="button button-icon icon iconfont bgg-nav-right-icon" ng-class="{true: 'icon-biaoxingfill', false: 'icon-biaoxing'}[isActive]" ng-click="shoucang()"></a>
+	  <a class="button button-icon icon iconfont bgg-nav-right-icon" ng-class="{true: 'icon-biaoxingfill', false: 'icon-biaoxing'}[isCollection]" ng-click="collection()"></a>
 	</ion-nav-buttons>
   <ion-content>
   	<div class="bgg-detail-title text-center">
   		<img src="http://imgs.shougongke.com///course/cover/201704/11/17841726_1491875684_rtw2p6rbhr.jpg@!web_course_593"/>
   		<h3>墨兰花水彩画教程</h3>
-  		<p>作者 | 当然是选择</p>
+  		<p>作者 | 当然是选择 <i class="iconfont" ng-class="{true: 'icon-xihuanfill', false: 'icon-xihuan'}[isFollow]" ng-click="follow()"></i></p>
   		<p class="text-left">获多福300克细纹、36色樱花固体水彩颜料、调色盘、干布一块、红胖子水彩笔最小号、劲草毛笔大中小号、可塑橡皮一块</p>
   	</div>
   	<div class="bgg-detail-box">

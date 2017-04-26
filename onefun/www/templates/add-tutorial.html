@@ -3,8 +3,24 @@
 	  <a class="button button-icon icon iconfont icon-xuanze bgg-nav-right-icon"></a>
 	</ion-nav-buttons>
   <ion-content>
-  	<!--<button class="button button-assertive" ng-click="selectImg()">上传图片</button>-->
-  	<button class="button button-small button-balanced" ng-click="addPhoto();">添加</button>
-            <button class="button button-small button-balanced"  ng-click="uploadPhoto();">上传</button>
+  	<div class="add-tutorial-addimg">
+  		<p>作品封面</p>
+  	</div>
+  	
+  	<div class="add-tutorial-info" ng-init="order=0">
+  		<textarea rows="1" class="add-tutorial-textarea add-tutorial-textarea-title" placeholder="写下你的作品名称吧"></textarea>
+  		<h4>工具和材料</h3>
+  		<textarea class="add-tutorial-textarea" placeholder="所需工具和原料"></textarea>
+  		<div class="add-tutorial-step" ng-repeat="step in course.steps">
+  			<h4>第{{ $index + 1}}步</h3>
+  			<div class="add-tutorial-addimg">
+		  		步骤图
+		  	</div>
+		  	<textarea class="add-tutorial-textarea" placeholder="添加步骤和说明">{{step.describe}}</textarea>
+		  	<button class="button button-assertive" ng-click="deleteStep(step)">删除步骤</button>
+  			<!--<img src=""/>-->
+  		</div>
+  		<button class="button button-dark button-block" ng-click="addStep()">添加一步</button>
+  	</div>
   </ion-content>
 </ion-view>
