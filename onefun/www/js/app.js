@@ -52,12 +52,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
-  .state('tab.liuyan', {
-      url: '/liuyan',
+  .state('tab.message', {
+      url: '/message',
       views: {
-        'tab-liuyan': {
-          templateUrl: 'templates/tab-liuyan.html',
-          controller: 'LiuYanCtrl'
+        'tab-message': {
+          templateUrl: 'templates/tab-message.html',
+          controller: 'MessageCtrl'
         }
       }
     })
@@ -89,12 +89,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 //});
 
 //隐藏次级底部tab方案
- .state('tab.detail', {
-    url: '/detail/:id',
+ .state('tab.tutorial-detail', {
+    url: '/tutorial-detail/:id',
     views: {
       'tab-home': {
-        templateUrl: 'templates/detail.html',
-        controller: 'DetailCtrl'
+        templateUrl: 'templates/tutorial-detail.html',
+        controller: 'TutorialDetailCtrl'
       }
     }
   })
@@ -109,32 +109,32 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
  
- .state('tab.my-guanzhu', {
-    url: '/my-guanzhu',
+ .state('tab.my-follow', {
+    url: '/my-follow',
     views: {
       'tab-personal': {
-        templateUrl: 'templates/my-guanzhu.html',
-        controller: 'MyGuanZhuCtrl'
+        templateUrl: 'templates/my-follow.html',
+        controller: 'MyFollowCtrl'
       }
     }
   })
  
- .state('tab.my-liuyan', {
-    url: '/my-liuyan',
+ .state('tab.my-message', {
+    url: '/my-message',
     views: {
       'tab-personal': {
-        templateUrl: 'templates/my-liuyan.html',
-        controller: 'MyLiuYanCtrl'
+        templateUrl: 'templates/my-message.html',
+        controller: 'MyMessageCtrl'
       }
     }
   })
  
- .state('tab.my-shoucang', {
-    url: '/my-shoucang',
+ .state('tab.my-collection', {
+    url: '/my-collection',
     views: {
       'tab-personal': {
-        templateUrl: 'templates/my-shoucang.html',
-        controller: 'MyShouCangCtrl'
+        templateUrl: 'templates/my-collection.html',
+        controller: 'MyCollectionCtrl'
       }
     }
   })
@@ -144,7 +144,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     views: {
       'tab-personal': {
         templateUrl: 'templates/my-tutorial-detail.html',
-        controller: 'MyTDetailCtrl'
+        controller: 'MyTutorialDetailCtrl'
       }
     }
   })
@@ -159,12 +159,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
 })
  
-.state('tab.add-liuyan', {
-    url: '/add-liuyan',
+.state('tab.add-message', {
+    url: '/add-message',
     views: {
       'tab-personal': {
-        templateUrl: 'templates/add-liuyan.html',
-        controller: 'AddLiuyanCtrl'
+        templateUrl: 'templates/add-message.html',
+        controller: 'AddMessageCtrl'
       }
     }
 })

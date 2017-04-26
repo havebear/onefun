@@ -12,20 +12,8 @@ angular.module('starter.controllers', [])
 	$scope.isActive = true;
 })
 
-//.controller('LiuYanCtrl', function($scope, LiuYan) {
-	.controller('LiuYanCtrl', function($scope) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-
-//$scope.liuyans = LiuYans.all();
-//$scope.remove = function(liuyan) {
-//  Chats.remove(liuyan);
-//};
+.controller('MessageCtrl', function($scope) {
+	
 })
 
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
@@ -42,7 +30,7 @@ angular.module('starter.controllers', [])
 	};
 })
 
-.controller('DetailCtrl', function($scope,$state,$stateParams,$ionicViewSwitcher) {
+.controller('TutorialDetailCtrl', function($scope,$state,$stateParams,$ionicViewSwitcher) {
 	//接受数据，是否收藏
 	$scope.isActive = true;
 	$scope.shoucang = function(){
@@ -62,11 +50,11 @@ angular.module('starter.controllers', [])
 
 .controller('TutorialListCtrl', function($scope,$stateParams) {
 	var type = $stateParams.type || 0;
-	var types = {"hot": "本周热门", "friend": "关注动态", "buyi": "布艺", "piyi": "皮艺", "zhiyi": "纸艺", "muyi": "木艺", "shipin": "饰品", "bianzhi": "编织", "moxing": "模型", "jiuwu": "旧物"};
+	var types = {"hot": "本周热门", "friend": "关注动态", "0000001": "布艺", "0000002": "皮艺", "0000003": "纸艺", "0000004": "木艺", "0000005": "饰品", "0000006": "编织", "0000007": "模型", "0000008": "旧物"};
 	$scope.pagetitle = types[type];
 })
 
-.controller('MyGuanZhuCtrl', function($scope, $ionicPopup, $timeout) {
+.controller('MyFollowCtrl', function($scope, $ionicPopup, $timeout) {
 	$scope.showConfirm = function(name,id) {
 	   var confirmPopup = $ionicPopup.confirm({
 	     title: '一坊',
@@ -86,7 +74,7 @@ angular.module('starter.controllers', [])
 	 };
 })
 
-.controller('MyLiuYanCtrl', function($scope, $ionicPopup, $timeout) {
+.controller('MyMessageCtrl', function($scope, $ionicPopup, $timeout) {
 	$scope.deleteLiuyan = function(){
 		var confirmPopup = $ionicPopup.confirm({
 	     title: '一坊',
@@ -106,11 +94,11 @@ angular.module('starter.controllers', [])
 	}
 })
 
-.controller('MyShouCangCtrl', function($scope) {
+.controller('MyCollectionCtrl', function($scope) {
 	
 })
 
-.controller('MyTDetailCtrl', function($scope, $ionicPopup, $timeout) {
+.controller('MyTutorialDetailCtrl', function($scope, $ionicPopup, $timeout) {
 	$scope.quxiao = function(){
 		var confirmPopup = $ionicPopup.confirm({
 	     title: '一坊',
@@ -132,8 +120,8 @@ angular.module('starter.controllers', [])
 
 .controller('LoginCtrl', function($scope,$state,Md5) {
 	$scope.customer = {
-		name: " ",
-		pwd: " "
+		name: "",
+		pwd: ""
 	}
 	$scope.login = function(){
 		console.log(Md5.hex_md5($scope.customer.pwd));
@@ -148,7 +136,7 @@ angular.module('starter.controllers', [])
 	
 })
 
-.controller('AddLiuyanCtrl', function($scope, $ionicPopup, $timeout) {
+.controller('AddMessageCtrl', function($scope, $ionicPopup, $timeout) {
 	$scope.addLiuyan = function(){
 		var confirmPopup = $ionicPopup.confirm({
 	     title: '一坊',
