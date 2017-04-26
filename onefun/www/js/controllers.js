@@ -130,8 +130,14 @@ angular.module('starter.controllers', [])
 	}
 })
 
-.controller('LoginCtrl', function($scope,$state) {
-	
+.controller('LoginCtrl', function($scope,$state,Md5) {
+	$scope.customer = {
+		name: " ",
+		pwd: " "
+	}
+	$scope.login = function(){
+		console.log(Md5.hex_md5($scope.customer.pwd));
+	}
 })
 
 .controller('RegCtrl', function($scope) {
