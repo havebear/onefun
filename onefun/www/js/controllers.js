@@ -138,8 +138,18 @@ angular.module('starter.controllers', [])
 	}
 })
 
-.controller('RegCtrl', function($scope) {
-	
+.controller('RegCtrl', function($scope, $http) {
+	$scope.reg = function(){
+		$http({  
+		    method:'post',  
+		    url:'http://103.228.131.139:8100/index.php/api/user/reqister',
+		    data: $scope.formData,  
+		}).then(function (response) {
+		    alert(response.status);
+		}, function (response) {
+		    alert(response.status);
+		});
+	}
 })
 
 .controller('AddTutorialCtrl', function($scope) {
@@ -182,7 +192,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('AddMessageCtrl', function($scope, $ionicPopup, $timeout) {
-	$scope.addLiuyan = function(){
+	$scope.addMessage = function(){
 		var confirmPopup = $ionicPopup.confirm({
 	     title: '一坊',
 	     template: '确认发表',
