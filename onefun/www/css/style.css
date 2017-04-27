@@ -41,7 +41,7 @@
 .bgg-message-list-box{}
 .bgg-message-list-item{/*border-bottom: 1px solid #eee;*/margin: 10px 0;padding-bottom: 5px;}
 .bgg-message-list-item-body{font-size: 16px;/*text-indent: 2em;*/}
-.bgg-message-list-item-info{height: 40px;color: #666;line-height: 40px;}
+.bgg-message-list-item-info{height: 30px;color: #666;line-height: 30px;}
 .bgg-message-list-item-info-dianzan{float: right;padding: 0 10px;padding-right: 0;}
 .bgg-message-list-item-info-dianzan i{font-size: 18px;}
 

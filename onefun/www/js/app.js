@@ -62,6 +62,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
   .state('tab.message', {
       url: '/message',
+      cache: 'false',
       views: {
         'tab-message': {
           templateUrl: 'templates/tab-message.html',

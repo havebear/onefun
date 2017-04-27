@@ -35,9 +35,9 @@ angular.module('starter.controllers', [])
 			$scope.hide();
 		});
 		$scope.parseInt = parseInt;
-		function parseInt(data){
-			data = parseInt(data);
-			return data;
+		function parseInt(str){
+			str = parseInt(str, 10);
+			return str;
 		}
 	})
 
