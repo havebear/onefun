@@ -15,19 +15,8 @@ angular.module('starter.controllers', [])
 		$scope.isActive = true;
 	})
 
-	.controller('MessageCtrl', function($scope,$http) {
-		$scope.posttext = {
-			token: Userinfo.getToken(),
-			//number:  //获取条数
-		};
-		$http({
-			url: server.domain + '/message/getmemessageshow',
-			method: 'post',
-			data: $scope.posttext,
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		}).then(function(response) {
+	.controller('MessageCtrl', function($scope, $http) {
+		$http.get(server.domain + "/message/getmessageshow").then(function(response) {
 			$scope.messages = response.data.data;
 		});
 	})
