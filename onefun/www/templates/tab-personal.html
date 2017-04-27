@@ -4,14 +4,13 @@
 	  <!--<a class="button button-icon icon iconfont icon-jiahao1 bgg-nav-right-icon"></a>-->
 	</ion-nav-buttons>
   <ion-content>
-  	<div class="bgg-personal-info text-center" style="display: none;">
-  		<h3 class="">当然是选择</h3>
-  		<p>编辑个人资料<i class="iconfont icon-fankui"></i></p>
-  	</div>
   	<div class="bgg-personal-info text-center" ui-sref="tab.login">
-  	<!--<div class="bgg-personal-info text-center" ng-click="GoLogin()">-->
-  		<h3 class="">登录<i class="iconfont icon-xiangyou1"></i></h3>
+  		<h3 class="">{{isLogin?'未登陆':user.User_NiclkName}}</h3>
+  		<p>{{content}}<i class="iconfont" ng-class="{true: 'icon-fankui', false: 'icon-xiangyou1'}[isright]"></i></p>
   	</div>
+  	<!--<div class="bgg-personal-info text-center" ui-sref="tab.login">
+  		<h3 class="">登录<i class="iconfont icon-xiangyou1"></i></h3>
+  	</div>-->
    <div class="row bgg-personal-model">
    	<a href="#/tab/my-collection" class="col text-center">
    		<h3>12</h3>

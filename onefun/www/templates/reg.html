@@ -1,16 +1,16 @@
 <ion-view view-title="注册" hide-tabs="true">
   <ion-content class="padding">
-  	<form class="bgg-form-box">
+  	<div class="bgg-form-box">
   	<label class="item item-input bgg-form-input"">
 		  <input class="text-center" type="text" placeholder="昵称由2到8个汉子组成" name="name" ng-model="formData.user_nickname">
     </label>
 		<label class="item item-input bgg-form-input"">
-		  <input class="text-center" type="text" placeholder="账号由4到16位字母或数字组成" name="name" ng-model="formData.accountnumber">
+		  <input class="text-center" type="text" placeholder="账号由4到16位字母或数字组成" name="name" ng-model="formData.user_accountnumber">
     </label>
 		<label class="item item-input bgg-form-input"">
-    	<input class="text-center" type="password" placeholder="密码" name="pwd" ng-model="formData.password">
+    	<input class="text-center" type="password" placeholder="密码" name="pwd" ng-model="originalpwd">
     </label>
-	</form>
+	</div>`
 	<button class="button button-block bgg-form-subbtn" ng-click="reg()">注册</button>
   </ion-content>
 </ion-view>

@@ -22,6 +22,22 @@ angular.module('starter.services', [])
   };  
 })
 
+.service('jsonToStr',function(){
+    this.transform = function(jsonData){
+        var string = '';
+        
+        for(str in jsonData){
+            string = string + str +'=' + jsonData[str] +'&';
+        }
+        
+        var _last = string.lastIndexOf('&');
+        
+        string = string.substring(0,_last);
+        
+        return string;
+    };
+})
+
 .service('Md5', function(){
     var hexcase = 0;  /* hex output format. 0 - lowercase; 1 - uppercase        */
     var b64pad  = ""; /* base-64 pad character. "=" for strict RFC compliance   */

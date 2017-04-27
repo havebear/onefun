@@ -20,14 +20,24 @@ angular.module('starter.controllers', [])
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('PersonalCtrl', function($scope, $state) {
+.controller('PersonalCtrl', function($scope, $rootScope, $state) {
+  $scope.user = {
+  	User_ID: '',
+  	User_NiclkName: '未登录'
+  }
+  $scope.content = '点击登录';
+  $scope.isright = false;
+  console.log($rootScope.isLogin);
+  if($rootScope.isLogin){
+  	$scope.user.User_ID = window.localStorage[cache.userid];
+  	$scope.user.User_NiclkName = window.localStorage[cache.niclkname]"
+  	$scope.content = "修改昵称";
+  	$scope.isright = true;
+  }
   $scope.settings = {
     enableFriends: true
   };
-	$scope.GoLogin = GoLogin;
-	function GoLogin(){
-		$state.go("tab.login");
-	};
+  location.replace(location.href);
 })
 
 .controller('TutorialDetailCtrl', function($scope,$state,$stateParams,$ionicViewSwitcher) {
@@ -48,12 +58,6 @@ angular.module('starter.controllers', [])
 			$scope.isFollow = true;
 		}
 	}
-	//同级解决次级页面出现底部tab方案
-//	$scope.backNav = function() {
-//	  console.log($scope.historyBack);
-//	  $ionicViewSwitcher.nextDirection('back');
-//	  $state.go($stateParams.back);
-//	};
 })
 
 .controller('TutorialListCtrl', function($scope,$stateParams) {
@@ -127,32 +131,66 @@ angular.module('starter.controllers', [])
 	}
 })
 
-.controller('LoginCtrl', function($scope,$state,Md5) {
-	$scope.customer = {
-		name: '',
-		pwd: ''
-	}
+.controller('LoginCtrl', function($scope,$http,$state,$ionicHistory,$rootScope,Md5) {
+	$scope.originalpwd = '';
+	$scope.formData = {
+		user_accountnumber: '',
+		password: ''
+	};
 	$scope.login = function(){
-		console.log(Md5.hex_md5($scope.customer.pwd));
-		console.log(00001);
-	}
-})
-
-.controller('RegCtrl', function($scope, $http) {
-	$scope.reg = function(){
-		$http({  
+		var $this = this;
+		$scope.formData.password = Md5.hex_md5($scope.originalpwd);
+		console.log($scope.formData);
+		$http({
+			url: server.domain + '/user/login',
 		    method:'post',  
-		    url:'http://103.228.131.139:8100/index.php/api/user/reqister',
-		    data: $scope.formData,  
-		}).then(function (response) {
-		    alert(response.status);
-		}, function (response) {
-		    alert(response.status);
+		    data: $scope.formData,
+		    headers: {'Content-Type': 'application/json'}
+		}).then(function (response){
+			$scope.data = response.data.data;
+			window.localStorage[cache.token] = $scope.data.token;
+			window.localStorage[cache.userid] = $scope.data.User_ID;
+			window.localStorage[cache.niclkname] = $scope.data.User_NiclkName;
+			$state.go("tab.personal");
+			$rootScope.isLogin = true;
+			$ionicHistory.goBack();
+//			console.log(window.localStorage[cache.token]);
 		});
 	}
 })
 
-.controller('AddTutorialCtrl', function($scope) {
+.controller('RegCtrl', function($scope, $http,Md5,$state,jsonToStr) {
+	$scope.originalpwd = '';
+	$scope.formData = {
+		user_nickname: '',
+		user_accountnumber: '',
+		password: ''
+	};
+	$scope.reg = function(){
+		$scope.formData.password = Md5.hex_md5($scope.originalpwd);
+		console.log(jsonToStr.transform($scope.formData));
+		$http({  
+			url: server.domain + '/user/register',
+		    method:'post',  
+		    data: $scope.formData,
+		    headers: {'Content-Type': 'application/json'}
+//		    data: jsonToStr.transform($scope.formData),
+//			data: {user_nickname: "132dssdf", accountnumber: "1165465", pwd: "153152"},
+//			headers:{'Content-Type': 'application/x-www-form-urlencoded'}
+		}).then(function (response) {
+			if(response.status){
+				$state.go("tab.personal");
+			}
+		});
+	};
+	function toUnicode(s){ 
+        return s.replace(/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])/g,function(){
+          return "\\u" + RegExp["$1"].charCodeAt(0).toString(16);
+        });
+      }
+})
+
+.controller('AddTutorialCtrl', function($scope,$http,jsonToStr) {
 	$scope.course = {
 		course_name: '',
 		course_name: '',
@@ -160,17 +198,14 @@ angular.module('starter.controllers', [])
 		course_material: '',
 		steps:[
 			{
-//				order: 1,
 				img: '',
 				describe: '我是第一'
 			},
 			{
-//				order: 2,
 				img: '',
 				describe: '我是第二'
 			},
 			{
-//				order: 3,
 				img: '',
 				describe: '我是第三'
 			}
@@ -188,6 +223,20 @@ angular.module('starter.controllers', [])
 	//删除当前步骤
 	$scope.deleteStep = function(step){
 		$scope.course.steps.splice($scope.course.steps.indexOf(step),1);
+	}
+	$scope.submit = function(){
+		console.log(jsonToStr.transform($scope.course));
+		$http({  
+			url: 'http://localhost:3000/reg',
+		    method:'post',  
+		    data: $scope.course,
+//			headers:{'Content-Type': 'application/x-www-form-urlencoded'}
+			headers: {'Content-Type': 'application/json'}
+		}).then(function (response) {
+		    alert(response);
+		}, function (response) {
+		    alert(response);
+		});
 	}
 })
 
@@ -209,12 +258,4 @@ angular.module('starter.controllers', [])
 	     }
 	   });
 	}
-	
-//	$cordovaToast
-//  .show('Here is a message', 'long', 'center')
-//  .then(function(success) {
-//    console.log('You are sure');
-//  }, function (error) {
-//    console.log('You are not sure');
-//  });
 });
