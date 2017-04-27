@@ -73,7 +73,7 @@
 .bgg-form-subbtn:visited{background: #222;color: #FFF;}
 
 /*多行文本输入*/
-.textarea{width:100%;min-height: 100%;border:none;outline:none;resize:none;overflow: hidden;font-size: 18px;}
+.textarea{width:100%;min-height: 100%;border:none;outline:none;resize:none;overflow: hidden;font-size: 18px;line-height: 24px;}
 
 /*添加教程*/
 .add-tutorial-addimg{width: 100%;padding: 80px 0;background: #DDDDDD;color: #333;font-size: 14px;text-align: center;}

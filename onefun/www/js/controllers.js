@@ -15,10 +15,30 @@ angular.module('starter.controllers', [])
 		$scope.isActive = true;
 	})
 
-	.controller('MessageCtrl', function($scope, $http) {
+	.controller('MessageCtrl', function($scope, $http, $ionicLoading) {
+		$scope.show = function() {
+		    $ionicLoading.show({
+		      template: '加载中',
+		      duration: 3000
+		    }).then(function(){
+		       console.log("The loading indicator is now displayed");
+		    });
+		  };
+		  $scope.hide = function(){
+		    $ionicLoading.hide().then(function(){
+		       console.log("The loading indicator is now hidden");
+		    });
+		  };
+		$scope.show({showBackdrop: false,});
 		$http.get(server.domain + "/message/getmessageshow").then(function(response) {
 			$scope.messages = response.data.data;
+			$scope.hide();
 		});
+		$scope.parseInt = parseInt;
+		function parseInt(data){
+			data = parseInt(data);
+			return data;
+		}
 	})
 
 	.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
@@ -135,35 +155,72 @@ angular.module('starter.controllers', [])
 		};
 	})
 
-	.controller('MyMessageCtrl', function($scope, $http, $ionicPopup, $timeout, Userinfo) {
+	.controller('MyMessageCtrl', function($scope, $http, $ionicPopup, $timeout, $ionicLoading, Userinfo) {
+		$scope.show = function() {
+		    $ionicLoading.show({
+		      template: '加载中',
+		      duration: 3000
+		    }).then(function(){
+		       console.log("The loading indicator is now displayed");
+		    });
+		  };
+		  $scope.hide = function(){
+		    $ionicLoading.hide().then(function(){
+		       console.log("The loading indicator is now hidden");
+		    });
+		  };
+		 
 		$scope.posttext = {
 			token: Userinfo.getToken(),
 			//number:  //获取条数
 		};
-		$http({
-			url: server.domain + '/message/getmemessageshow',
-			method: 'post',
-			data: $scope.posttext,
-			headers: {
-				'Content-Type': 'application/json'
+		
+		getMeMessage();
+		
+		function getMeMessage(){
+			$scope.show();
+			$http({
+				url: server.domain + '/message/getmemessageshow',
+				method: 'post',
+				data: $scope.posttext,
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(function(response) {
+				$scope.messages = response.data.data;
+				$scope.hide();
+			});
+		}
+		
+		$scope.deleteMessage = function(id){
+			$scope.delposttext = {
+				token: Userinfo.getToken(),
+				message_id: id
 			}
-		}).then(function(response) {
-			$scope.messages = response.data.data;
-		});
-		$scope.deleteMessage = function() {
 			var confirmPopup = $ionicPopup.confirm({
 				title: '一坊',
-				template: '确认删除',
+				template: '删除留言',
 				cancelText: '取消',
 				okText: '确定',
 				okType: 'button-dark'
 			});
-
+			console.log($scope.posttext);
 			confirmPopup.then(function(res) {
 				if(res) {
-					console.log('You are sure');
+					$http({
+						url: server.domain + '/message/deletemessage',
+						method: 'post',
+						data: $scope.delposttext,
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					}).then(function(response) {
+						if(response.status){
+							getMeMessage();
+						}
+					});
 				} else {
-					console.log('You are not sure');
+					return true;
 				}
 			});
 		}
@@ -328,7 +385,6 @@ angular.module('starter.controllers', [])
 							'Content-Type': 'application/json'
 						}
 					}).then(function(response) {
-						alert("发表成功")
 						$ionicHistory.goBack();
 					});
 				} else {

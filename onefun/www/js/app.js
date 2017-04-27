@@ -130,6 +130,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
  
  .state('tab.my-message', {
     url: '/my-message',
+    cache: 'false',
     views: {
       'tab-personal': {
         templateUrl: 'templates/my-message.html',
