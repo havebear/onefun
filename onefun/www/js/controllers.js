@@ -20,24 +20,37 @@ angular.module('starter.controllers', [])
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('PersonalCtrl', function($scope, $rootScope, $state) {
+.controller('PersonalCtrl', function($scope, $rootScope, $state, Userinfo) {
+  Userinfo.isLogin();
   $scope.user = {
   	User_ID: '',
-  	User_NiclkName: '未登录'
+  	User_NiclkName: ''
   }
-  $scope.content = '点击登录';
-  $scope.isright = false;
-  console.log($rootScope.isLogin);
-  if($rootScope.isLogin){
-  	$scope.user.User_ID = window.localStorage[cache.userid];
-  	$scope.user.User_NiclkName = window.localStorage[cache.niclkname]"
-  	$scope.content = "修改昵称";
-  	$scope.isright = true;
-  }
+  
+	if($rootScope.isLogin){
+		$scope.content = "修改昵称";
+		$scope.user.User_NiclkName = Userinfo.getName();
+		console.log($rootScope.isLogin);
+	}else{
+	  	console.log($rootScope.isLogin);
+	}
   $scope.settings = {
     enableFriends: true
   };
-  location.replace(location.href);
+  
+  $scope.quitlogin = function(){
+  	Userinfo.quitlogin();
+  	console.log($rootScope.isLogin);
+//	location.replace('#/tab/personal');
+  }
+  
+  $scope.goEL = function(){
+  	if($rootScope.isLogin){
+  		console.log(11111111111111111);
+  	}else{
+  		$state.go("tab.login");
+  	}
+  }
 })
 
 .controller('TutorialDetailCtrl', function($scope,$state,$stateParams,$ionicViewSwitcher) {
@@ -58,6 +71,7 @@ angular.module('starter.controllers', [])
 			$scope.isFollow = true;
 		}
 	}
+	location.replace('#/tab/personal');
 })
 
 .controller('TutorialListCtrl', function($scope,$stateParams) {
@@ -131,7 +145,7 @@ angular.module('starter.controllers', [])
 	}
 })
 
-.controller('LoginCtrl', function($scope,$http,$state,$ionicHistory,$rootScope,Md5) {
+.controller('LoginCtrl', function($scope,$http,$state,$ionicHistory,$rootScope,Md5,Userinfo) {
 	$scope.originalpwd = '';
 	$scope.formData = {
 		user_accountnumber: '',
@@ -148,13 +162,13 @@ angular.module('starter.controllers', [])
 		    headers: {'Content-Type': 'application/json'}
 		}).then(function (response){
 			$scope.data = response.data.data;
-			window.localStorage[cache.token] = $scope.data.token;
-			window.localStorage[cache.userid] = $scope.data.User_ID;
-			window.localStorage[cache.niclkname] = $scope.data.User_NiclkName;
+			Userinfo.setId($scope.data.token);
+			Userinfo.setId($scope.data.User_ID);
+			Userinfo.setName($scope.data.User_NiclkName);
 			$state.go("tab.personal");
 			$rootScope.isLogin = true;
-			$ionicHistory.goBack();
-//			console.log(window.localStorage[cache.token]);
+//			$ionicHistory.goBack();
+			$state.go("tab.personal");
 		});
 	}
 })
@@ -171,16 +185,13 @@ angular.module('starter.controllers', [])
 		console.log(jsonToStr.transform($scope.formData));
 		$http({  
 			url: server.domain + '/user/register',
-		    method:'post',  
+		    method:'post', 
 		    data: $scope.formData,
 		    headers: {'Content-Type': 'application/json'}
 //		    data: jsonToStr.transform($scope.formData),
-//			data: {user_nickname: "132dssdf", accountnumber: "1165465", pwd: "153152"},
 //			headers:{'Content-Type': 'application/x-www-form-urlencoded'}
 		}).then(function (response) {
-			if(response.status){
-				$state.go("tab.personal");
-			}
+			$state.go("tab.login");
 		});
 	};
 	function toUnicode(s){ 

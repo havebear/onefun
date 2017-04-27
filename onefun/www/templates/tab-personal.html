@@ -1,12 +1,14 @@
 <ion-view view-title="个人中心">
 	<ion-nav-buttons side="right">
 	  <!--<a class="button iconfont icon-others bgg-nav-right-icon"></a>-->
-	  <!--<a class="button button-icon icon iconfont icon-jiahao1 bgg-nav-right-icon"></a>-->
+	  <a class="button button-icon icon iconfont icon-guanbi1" ng-click="quitlogin()"></a>
 	</ion-nav-buttons>
   <ion-content>
-  	<div class="bgg-personal-info text-center" ui-sref="tab.login">
-  		<h3 class="">{{isLogin?'未登陆':user.User_NiclkName}}</h3>
-  		<p>{{content}}<i class="iconfont" ng-class="{true: 'icon-fankui', false: 'icon-xiangyou1'}[isright]"></i></p>
+  	<div class="bgg-personal-info text-center" ng-click="goEL()">
+  		<h3 class="" ng-if="!isLogin">未登陆</h3>
+  		<h3 class="" ng-if="isLogin" ng-bind="user.User_NiclkName"></h3>
+  		<p class="" ng-if="!isLogin">点击登录<i class="iconfont icon-xiangyou1"></i></p>
+  		<p class="" ng-if="isLogin">修改昵称<i class="iconfont icon-fankui"></i></p>
   	</div>
   	<!--<div class="bgg-personal-info text-center" ui-sref="tab.login">
   		<h3 class="">登录<i class="iconfont icon-xiangyou1"></i></h3>

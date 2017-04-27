@@ -81,6 +81,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
   .state('tab.personal', {
     url: '/personal',
+    cache: 'false',
     views: {
       'tab-personal': {
         templateUrl: 'templates/tab-personal.html',

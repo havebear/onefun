@@ -65,7 +65,7 @@
 
 .bgg-form-box{}
 .bgg-form-input{border: none;}
-.bgg-form-input input{font-size: 20px;color: #333;font-weight: 500;}
+.bgg-form-input input{font-size: 20px;line-height: 28px;color: #333;font-weight: 500;}
 .bgg-form-input:placeholder{font-size: 16px;}
 .bgg-form-subbtn{background: #333;border: none;color: #FFF;}
 .bgg-form-subbtn:hover{background: #222;color: #FFF;}

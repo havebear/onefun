@@ -38,6 +38,42 @@ angular.module('starter.services', [])
     };
 })
 
+.service('Userinfo',function($rootScope){
+		this.isLogin = function(){
+			if(window.localStorage[cache.userid]){
+				$rootScope.isLogin = true;
+			}else{
+				$rootScope.isLogin = false;
+			}
+		}
+	  this.quitlogin = function(){
+	  	window.localStorage.clear();
+	  	$rootScope.isLogin = false;
+	  }
+		this.setName = function(name){
+			window.localStorage[cache.niclkname] = name;
+			console.log("我已经成功保存了昵称");
+	  };
+    this.getName = function(){
+    	console.log("我已经成功获取了昵称");
+    	return window.localStorage[cache.niclkname];
+    };
+    this.setId = function(id){
+			window.localStorage[cache.userid] = id;
+	  };
+    this.getId = function(){
+    	return window.localStorage[cache.userid];
+    };
+    this.setToken = function(token){
+			window.localStorage[cache.token] = token;
+	  };
+    this.getToken = function(){
+    	return window.localStorage[cache.token];
+    };
+    $rootScope.User_NiclkName = this.getName();
+    $rootScope.User_ID = this.getId();
+})
+
 .service('Md5', function(){
     var hexcase = 0;  /* hex output format. 0 - lowercase; 1 - uppercase        */
     var b64pad  = ""; /* base-64 pad character. "=" for strict RFC compliance   */
