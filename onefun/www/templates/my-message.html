@@ -5,21 +5,21 @@
   <ion-content padding="true">
   	<div class="bgg-message-list-box">
   		<!--<p class="text-left">4月17日 星期一</p>-->
-  		<div class="bgg-message-list-item">
-  			<p class="bgg-message-list-item-body">手艺，不仅是一种技能，更是一种艺术，留住手艺就是留住文明的记忆，然而在今天，有些手艺却举步维艰，急需人们关注与保护，手艺传承任重而道远</p>
+  		<div class="bgg-message-list-item" ng-repeat="message in messages">
+  			<p class="bgg-message-list-item-body">{{message.Message_content}}</p>
 				<div class="bgg-message-list-item-info">
 					<span>2017.4.18 · 12人点赞</span>
 					<span class="bgg-message-list-item-info-dianzan" ng-click="deleteMessage()"><i class="iconfont icon-shanchu"></i>删除</span>
 				</div> 
 			</div>
 			
-			<div class="bgg-message-list-item">
+			<!--<div class="bgg-message-list-item">
   			<p class="bgg-message-list-item-body">在OneFun有这样一群手艺人，虽然他们的才华没有进入公众视野，但他们依然因为执着和热爱在坚持着，且尝试用各种不同的方式和自己的努力延续着这些手艺的生命</p>
 				<div class="bgg-message-list-item-info">
 					<span>2017.4.18 · 12人点赞</span>
 					<span class="bgg-message-list-item-info-dianzan" ng-click="deleteMessage()"><i class="iconfont icon-shanchu"></i>删除</span>
 				</div> 
-			</div>
+			</div>-->
   	</div>
   </ion-content>
 </ion-view>
