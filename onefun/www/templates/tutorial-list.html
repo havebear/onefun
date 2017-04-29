@@ -1,9 +1,22 @@
 <ion-view view-title="{{pagetitle}}" hide-tabs="true">
 	<ion-content class="padding">
 		<div class="bgg-tutorial-list-box">
-			<!--<p class="text-center bgg-title-text">4月17日 星期一</p>-->
-			<!--同级解决次级页面出现底部tab方案-->
-			<!--<div class="bgg-home-list-item" ui-sref="detail({id:1,back:'tab.home'})" ﻿​nav-transition="ios" nav-direction="forward">-->
+			<div class="bgg-tutorial-list-item" ng-repeat="course in courses">
+					<a href="#/tab/tutorial-detail/{{course.Course_ID}}">
+					<!--<a ui-sref="tab.tutorial-detail">-->
+						<img src="{{url + course.Sy_Img}}"/>
+						<h4>{{course.Course_Name}}</h4>
+					</a>
+					<div class="bgg-tutorial-list-item-info">
+						<span>{{course.User_NiclkName}} · {{course.Course_date}}</span>
+						<span class="bgg-tutorial-list-item-info-xihuan" ng-click="a()">
+							<i class="iconfont" ng-class="{true: 'icon-biaoxingfill', false: 'icon-biaoxing'}[course.is_collection]"></i>{{course.Collection_Number}}
+						</span>
+					</div> 
+				</div>
+			</div>
+		</div>
+		<!--<div class="bgg-tutorial-list-box">
 			<div class="bgg-tutorial-list-item">
 				<a href="#/tab/detail/132">
 					<img src="http://imgs.shougongke.com//Public/data/lunbo/kE4kXNJX25.jpg" />
@@ -29,6 +42,6 @@
 					</span>
 				</div>
 			</div>
-		</div>
+		</div>-->
 	</ion-content>
 </ion-view>

@@ -1,43 +1,139 @@
 angular.module('starter.controllers', [])
 
-	.controller('HomeCtrl', function($scope, $http) {
+	.controller('HomeCtrl', function($scope, $http,$rootScope,Userinfo) {
+		Userinfo.isLogin();
+		$scope.url = server.url;
 		$scope.a = function() {
 			alert(1)
 		};
+		
+		$scope.apiurl = server.domain + "/course/gettop20";
+		
 		getCourse();
 
 		function getCourse() {
-			$http.get("http://localhost:3000/getCourse").then(function(response) {
-				$scope.courses = response.data;
+			if($rootScope.isLogin){
+				$scope.apiurl = server.domain + "/course/gettop20?token=" + Userinfo.getToken();
+			}else{
+				$scope.apiurl = server.domain + "/course/gettop20";
+			}
+			console.log($scope.apiurl);
+			$http.get($scope.apiurl).then(function(response) {
+				$scope.courses = response.data.data;
 			});
 		}
 		//收藏图标默认是未收藏
 		$scope.isActive = true;
 	})
 
-	.controller('MessageCtrl', function($scope, $http, $ionicLoading) {
+	.controller('MessageCtrl', function($scope, $http, $ionicLoading, $ionicPopup, $timeout, $rootScope, Userinfo) {
+		Userinfo.isLogin();
 		$scope.show = function() {
-		    $ionicLoading.show({
-		      template: '加载中',
-		      duration: 3000
-		    }).then(function(){
-		       console.log("The loading indicator is now displayed");
-		    });
-		  };
-		  $scope.hide = function(){
-		    $ionicLoading.hide().then(function(){
-		       console.log("The loading indicator is now hidden");
-		    });
-		  };
-		$scope.show({showBackdrop: false,});
-		$http.get(server.domain + "/message/getmessageshow").then(function(response) {
-			$scope.messages = response.data.data;
-			$scope.hide();
+			$ionicLoading.show({
+				template: '加载中',
+				duration: 3000
+			}).then(function() {});
+		};
+
+		$scope.hide = function() {
+			$ionicLoading.hide().then(function() {});
+		};
+
+		$scope.show({
+			showBackdrop: false,
 		});
-		$scope.parseInt = parseInt;
-		function parseInt(str){
-			str = parseInt(str, 10);
-			return str;
+
+		$scope.hasmore = true;
+		var run = false; //模拟线程锁机制  防止多次请求 含义：是否正在请求。请注意，此处并非加入到了就绪队列，而是直接跳过不执行
+		$scope.posttext = {
+			number: 20,
+			index: 0,
+		};
+
+		var apiurl1 = apiurl1 = server.domain + "/message/getmessageshow?number=" + $scope.posttext.number + "&index=" + $scope.posttext.index;
+
+		init(1);
+
+		function init(state) {
+			if($rootScope.isLogin) {
+				apiurl1 = server.domain + "/message/getmessageshow?number=" + $scope.posttext.number + "&index=" + $scope.posttext.index + "&token=" + Userinfo.getToken();
+			} else {
+				apiurl1 = server.domain + "/message/getmessageshow?number=" + $scope.posttext.number + "&index=" + $scope.posttext.index;
+			}
+			if(!run) {
+				run = true;
+				$http.get(apiurl1).then(function(response) {
+					run = false;
+					if(state == 3) {
+						$scope.messages = $scope.messages.concat(response.data.data);
+						if(response.data.data == null || response.data.data.length == 0) {
+							console.log("结束");
+							$scope.hasmore = false;
+
+						} else {
+							$scope.posttext.index++;
+						}
+					} else {
+						$scope.messages = response.data.data;
+						if(state == 1) {
+							$scope.hide();
+						}
+					}
+				});
+			}
+
+		};
+
+		$scope.doRefresh = function() {
+			$scope.posttext.index = 0;
+			init(2);
+			$scope.hasmore = true;
+			$scope.$broadcast('scroll.refreshComplete');
+		};
+
+		$scope.loadMore = function() {
+			init(3);
+			$scope.$broadcast('scroll.infiniteScrollComplete');
+		};
+
+		$scope.posttext2 = {
+			token: '',
+			message_id: 0,
+		}
+
+		$scope.thumbsup = function(message) {
+			$scope.posttext2.token = Userinfo.getToken();
+			$scope.posttext2.message_id = message.Message_ID;
+			console.log($scope.posttext2);
+			var apiurl2 = server.domain + '/message/thumbsup';
+			if(message.is_thumbsup) {
+				message.is_thumbsup = false;
+				console.log(message.is_thumbsup);
+				apiurl2 = server.domain + '/message/thumbsdown';
+			} else {
+				message.is_thumbsup = true;
+				console.log(message.is_thumbsup);
+				apiurl2 = server.domain + '/message/thumbsup';
+			}
+			$http({
+				url: apiurl2,
+				method: 'post',
+				data: $scope.posttext2,
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(function successCallback(response) {
+				message.ThumbsUp_count = response.data.data.Count_ThumbsUp;
+				if(message.is_thumbsup) {
+//					message.is_thumbsup = false;
+//					message.ThumbsUp_count--;
+				} else {
+//					message.is_thumbsup = true;
+//					message.ThumbsUp_count++;
+				}
+			}, function errorCallback(response) {
+				console.log("点赞未成功");
+			});
 		}
 	})
 
@@ -45,7 +141,7 @@ angular.module('starter.controllers', [])
 		$scope.chat = Chats.get($stateParams.chatId);
 	})
 
-	.controller('PersonalCtrl', function($scope, $rootScope, $state,$ionicPopup, $timeout, Userinfo) {
+	.controller('PersonalCtrl', function($scope, $rootScope, $state, $ionicPopup, $timeout, $ionicModal, Userinfo) {
 		Userinfo.isLogin();
 		$scope.user = {
 			User_ID: '',
@@ -65,7 +161,7 @@ angular.module('starter.controllers', [])
 		};
 
 		$scope.quitlogin = function() {
-			if(!$rootScope.isLogin){
+			if(!$rootScope.isLogin) {
 				return true;
 			}
 			var confirmPopup = $ionicPopup.confirm({
@@ -89,11 +185,40 @@ angular.module('starter.controllers', [])
 
 		$scope.goEL = function() {
 			if($rootScope.isLogin) {
-				console.log(11111111111111111);
+				$scope.openModal();
 			} else {
 				$state.go("tab.login");
 			}
 		}
+
+		$ionicModal.fromTemplateUrl('templates/updatename.html', { // modal窗口选项
+			scope: $scope,
+			animation: 'silde-in-up'
+		}).then(function(modal) {
+			$scope.modal = modal;
+		});
+
+		$scope.openModal = function() {
+			$scope.modal.show();
+		};
+
+		$scope.closeModal = function() {
+			$scope.modal.hide();
+		};
+
+		//当我们用完模型时，清除它！
+		$scope.$on('$destroy', function() {
+			$scope.modal.remove();
+		});
+
+		// 当隐藏模型时执行动作
+		$scope.$on('modal.hide', function() {
+		// 执行动作
+		});
+		// 当移动模型时执行动作
+		$scope.$on('modal.removed', function() {
+		// 执行动作
+		});
 	})
 
 	.controller('TutorialDetailCtrl', function($scope, $state, $stateParams, $ionicViewSwitcher) {
@@ -114,10 +239,10 @@ angular.module('starter.controllers', [])
 				$scope.isFollow = true;
 			}
 		}
-		location.replace('#/tab/personal');
 	})
 
-	.controller('TutorialListCtrl', function($scope, $stateParams) {
+	.controller('TutorialListCtrl', function($scope, $state,$stateParams, $ionicHistory,$http,$rootScope,Userinfo) {
+		$scope.url = server.url;
 		var type = $stateParams.type || 0;
 		var types = {
 			"hot": "本周热门",
@@ -132,7 +257,34 @@ angular.module('starter.controllers', [])
 			8: "旧物"
 		};
 		$scope.pagetitle = types[type];
+		$scope.apiurl = server.domain + "/course/getcoursetypeshow?typeid=" + $stateParams.type;
+		getCourse();
 
+		function getCourse() {
+			if($rootScope.isLogin){
+				if($stateParams.type == "hot"){
+					$scope.apiurl = server.domain + "/course/getweekhotcourse?token=" + Userinfo.getToken();
+				}else if($stateParams.type == "friend"){
+//					$scope.apiurl = server.domain + "/course/getcoursetypeshow?typeid=" + $stateParams.type + "&token=" + Userinfo.getToken();
+				}else{
+					$scope.apiurl = server.domain + "/course/getcoursetypeshow?typeid=" + $stateParams.type + "&token=" + Userinfo.getToken();
+				}
+			}else{
+				if($stateParams.type == "hot"){
+					$scope.apiurl = server.domain + "/course/getweekhotcourse";
+				}else if($stateParams.type == "friend"){
+//					$state.go("tab.login");
+					alert("因为你没有登录,所以不给你看，其实是不知道怎么做，后面再想吧");
+					return true;
+				}else{
+					$scope.apiurl = server.domain + "/course/getcoursetypeshow?typeid=" + $stateParams.type;
+				}
+			}
+			console.log($scope.apiurl);
+			$http.get($scope.apiurl).then(function(response) {
+				$scope.courses = response.data.data;
+			});
+		}
 	})
 
 	.controller('MyFollowCtrl', function($scope, $ionicPopup, $timeout) {
@@ -157,27 +309,28 @@ angular.module('starter.controllers', [])
 
 	.controller('MyMessageCtrl', function($scope, $http, $ionicPopup, $timeout, $ionicLoading, Userinfo) {
 		$scope.show = function() {
-		    $ionicLoading.show({
-		      template: '加载中',
-		      duration: 3000
-		    }).then(function(){
-		       console.log("The loading indicator is now displayed");
-		    });
-		  };
-		  $scope.hide = function(){
-		    $ionicLoading.hide().then(function(){
-		       console.log("The loading indicator is now hidden");
-		    });
-		  };
-		 
+			$ionicLoading.show({
+				template: '加载中',
+				duration: 3000
+			}).then(function() {
+				console.log("The loading indicator is now displayed");
+			});
+		};
+		$scope.hide = function() {
+			$ionicLoading.hide().then(function() {
+				console.log("The loading indicator is now hidden");
+			});
+		};
+
 		$scope.posttext = {
 			token: Userinfo.getToken(),
-			//number:  //获取条数
+			index: 0,
+			number: 20
 		};
-		
+
 		getMeMessage();
-		
-		function getMeMessage(){
+
+		function getMeMessage() {
 			$scope.show();
 			$http({
 				url: server.domain + '/message/getmemessageshow',
@@ -191,8 +344,8 @@ angular.module('starter.controllers', [])
 				$scope.hide();
 			});
 		}
-		
-		$scope.deleteMessage = function(id){
+
+		$scope.deleteMessage = function(id) {
 			$scope.delposttext = {
 				token: Userinfo.getToken(),
 				message_id: id
@@ -215,7 +368,7 @@ angular.module('starter.controllers', [])
 							'Content-Type': 'application/json'
 						}
 					}).then(function(response) {
-						if(response.status){
+						if(response.status) {
 							getMeMessage();
 						}
 					});
@@ -302,38 +455,31 @@ angular.module('starter.controllers', [])
 				$state.go("tab.login");
 			});
 		};
-
-		function toUnicode(s) {
-			return s.replace(/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])/g, function() {
-				return "\\u" + RegExp["$1"].charCodeAt(0).toString(16);
-			});
-		}
 	})
 
-	.controller('AddTutorialCtrl', function($scope, $http, jsonToStr) {
+	.controller('AddTutorialCtrl', function($scope, $http, $ionicPopup, $timeout, $ionicHistory, Userinfo, jsonToStr) {
 		$scope.course = {
-			course_name: '',
+			course_img: '',
 			course_name: '',
 			type: '',
 			course_material: '',
 			steps: [{
 					img: '',
-					describe: '我是第一'
+					describe: ''
 				},
 				{
 					img: '',
-					describe: '我是第二'
+					describe: ''
 				},
 				{
 					img: '',
-					describe: '我是第三'
+					describe: ''
 				}
 			]
 		};
 		//添加一个步骤
 		$scope.addStep = function() {
 			var nextstep = {
-				order: $scope.course.steps.length + 1,
 				img: '',
 				describe: ''
 			}
@@ -344,18 +490,31 @@ angular.module('starter.controllers', [])
 			$scope.course.steps.splice($scope.course.steps.indexOf(step), 1);
 		}
 		$scope.submit = function() {
-			console.log(jsonToStr.transform($scope.course));
-			$http({
-				url: 'http://localhost:3000/reg',
-				method: 'post',
-				data: $scope.course,
-				headers: {
-					'Content-Type': 'application/json'
+			console.log($scope.course);
+			$scope.course.token = Userinfo.getToken();
+			var confirmPopup = $ionicPopup.confirm({
+				title: '一坊',
+				template: '确认发布',
+				cancelText: '取消',
+				okText: '确定',
+				okType: 'button-dark'
+			});
+
+			confirmPopup.then(function(res) {
+				if(res) {
+					$http({
+						url: server.domain + '/message/add',
+						method: 'post',
+						data: $scope.course,
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					}).then(function(response) {
+						$ionicHistory.goBack();
+					});
+				} else {
+					return true;
 				}
-			}).then(function(response) {
-				alert(response);
-			}, function(response) {
-				alert(response);
 			});
 		}
 	})

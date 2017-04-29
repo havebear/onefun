@@ -1,16 +1,19 @@
 <ion-view view-title="留言">
-  <ion-content class="padding">
+  <ion-content>
+  	<ion-refresher pulling-text="下拉刷新" on-refresh="doRefresh()"></ion-refresher>
   	<div class="bgg-message-list-box">
   		<!--<p class="text-left">4月17日 星期一</p>-->
   		<div class="bgg-message-list-item" ng-repeat="message in messages">
   			<p class="bgg-message-list-item-body">{{message.Message_content}}</p>
 				<div class="bgg-message-list-item-info">
-					<span>{{message.User_NickName}} · {{message.Message_date}}</span>
-					<!--<span class="bgg-message-list-item-info-dianzan">
-						<i class="iconfont icon-zantong"></i>{{message.ThumbsUp_count}}人
-					</span>-->
+					<span>{{message.User_NickName}} · {{message.Message_date}} </span>
+					<span class="bgg-message-list-item-info-dianzan" ng-click="thumbsup(message)">
+						<i class="iconfont" ng-class="{true: 'icon-zantongfill', false: 'icon-zantong'}[message.is_thumbsup]"></i>
+						{{message.ThumbsUp_count}}&nbsp;
+					</span>
 				</div> 
 			</div>
+			<ion-infinite-scroll ng-if="hasmore" on-infinite="loadMore()" distance="5%"></ion-infinite-scroll>
   	</div>
   </ion-content>
 </ion-view>

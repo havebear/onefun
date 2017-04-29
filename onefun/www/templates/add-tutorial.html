@@ -8,15 +8,15 @@
   	</div>
   	
   	<div class="add-tutorial-info" ng-init="order=0">
-  		<textarea rows="1" class="add-tutorial-textarea add-tutorial-textarea-title" placeholder="写下你的作品名称吧"></textarea>
+  		<textarea rows="1" class="add-tutorial-textarea add-tutorial-textarea-title" placeholder="写下你的作品名称吧" ng-model="course.course_name"></textarea>
   		<h4>工具和材料</h3>
-  		<textarea class="add-tutorial-textarea" placeholder="所需工具和原料"></textarea>
+  		<textarea class="add-tutorial-textarea" placeholder="所需工具和原料" ng-model="course.course_material"></textarea>
   		<div class="add-tutorial-step" ng-repeat="step in course.steps">
   			<h4>第{{ $index + 1}}步</h3>
   			<div class="add-tutorial-addimg">
 		  		步骤图
 		  	</div>
-		  	<textarea class="add-tutorial-textarea" placeholder="添加步骤和说明">{{step.describe}}</textarea>
+		  	<textarea class="add-tutorial-textarea" placeholder="添加步骤和说明" ng-model="step.describe"></textarea>
 		  	<button class="button button-assertive" ng-click="deleteStep(step)">删除步骤</button>
   			<!--<img src=""/>-->
   		</div>

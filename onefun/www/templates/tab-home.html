@@ -72,44 +72,29 @@
 		
 		<div class="row bgg-home-hot-friend">
 			<a href="#/tab/tutorial-list/hot" class="col col-49 text-center bgg-home-hot-button">
-				<!--<img src="http://imgs.shougongke.com//Public/data/lunbo/E8XXycayen.jpg"/>-->
 				本周热门
-				<!--<button class="button button-full button-clear">
-				   本周热门
-				</button>-->
 			</a>
 			<!--<div class="col 2"></div>-->
 			<a href="#/tab/tutorial-list/friend" class="col col-49 text-center bgg-home-friend-button col-offset-2">
-				<!--<img src="http://imgs.shougongke.com//Public/data/lunbo/xZsCJG7Qzh.jpg"/>-->
-				<!--<button class="button button-full button-dark">
-				   关注动态
-				</button>-->
 				关注动态
 			</a>
 		</div>
 		
 		<div class="bgg-tutorial-list-box">
 			<p class="text-center bgg-title-text">4月17日 星期一</p>
-			<!--同级解决次级页面出现底部tab方案-->
-			<!--<div class="bgg-home-list-item" ui-sref="detail({id:1,back:'tab.home'})" ﻿​nav-transition="ios" nav-direction="forward">-->
 			<div class="bgg-tutorial-list-item" ng-repeat="course in courses">
-				<a href="#/tab/tutorial-detail/132">
-					<img src="{{course.sy_pictur}}"/>
-					<h4>{{course.coursename}}</h4>
+				<a href="#/tab/tutorial-detail/{{course.Course_ID}}">
+				<!--<a ui-sref="tab.tutorial-detail">-->
+					<img src="{{url + course.Sy_Img}}"/>
+					<h4>{{course.Course_Name}}</h4>
 				</a>
 				<div class="bgg-tutorial-list-item-info">
-					<span>{{course.username}} · 2017.4.18</span>
+					<span>{{course.User_NiclkName}} · {{course.Course_date}}</span>
 					<span class="bgg-tutorial-list-item-info-xihuan" ng-click="a()">
-						<i class="iconfont" ng-class="{true: 'icon-biaoxingfill', false: 'icon-biaoxing'}[isActive]"></i>117人
+						<i class="iconfont" ng-class="{true: 'icon-biaoxingfill', false: 'icon-biaoxing'}[course.is_collection]"></i>{{course.Collection_Number}}
 					</span>
 				</div> 
 			</div>
-			
-			<!--<div class="bgg-home-list-item">
-				<img src="http://imgs.shougongke.com//Public/data/lunbo/XQEKNMArcZ.jpg"/>
-				<h4>点匠令！手工客×拾艺学堂 扶植独立手艺人计划</h4>
-				<p>作者 | 张三 <i class="iconfont icon-biaoxing"></i>12人收藏</p>
-			</div>-->
 		</div>
   </ion-content>
 </ion-view>

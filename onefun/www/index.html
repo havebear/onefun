@@ -35,6 +35,13 @@
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
+    <script type="text/javascript">  
+  
+		  document.addEventListener("deviceready", onDeviceReady, false);  
+		  function onDeviceReady() {  
+		    navigator.splashscreen.hide();  
+		  }  
+		</script>  
   </head>
   <body ng-app="starter">
     <!--
