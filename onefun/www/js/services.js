@@ -21,7 +21,21 @@ angular.module('starter.services', [])
 			}
 		};
 	})
-
+	
+	.service('Toast', function($rootScope,$cordovaToast) {
+		this.toast = function(str){
+			try {
+				$cordovaToast.showLongTop(str).then(function(success) {
+					// success  
+				}, function(error) {
+					//err
+				});
+			} catch(e) {
+				console.log(str);
+			}
+		}
+	})
+	
 	.service('jsonToStr', function() {
 		this.transform = function(jsonData) {
 			var string = '';
@@ -38,10 +52,27 @@ angular.module('starter.services', [])
 		};
 	})
 
-	.service('Userinfo', function($rootScope) {
+	.service('Userinfo', function($rootScope,$http) {
 		this.isLogin = function() {
 			if(window.localStorage[cache.userid]) {
 				$rootScope.isLogin = true;
+				$http({
+					url: server.domain + "/user/checklogin",
+					method: 'post',
+					data: {"token":window.localStorage[cache.token]},
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(function successCallback(response) {
+					console.log(response.data.status);
+					if(response.data.status){
+						$rootScope.isLogin = true;
+					}else{
+						$rootScope.isLogin = false;
+					}
+				}, function errorCallback(response) {
+					$rootScope.isLogin = false;
+				});
 			} else {
 				$rootScope.isLogin = false;
 			}

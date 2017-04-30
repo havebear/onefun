@@ -1,17 +1,17 @@
 <ion-view view-title="我的留言" hide-tabs="true">
 	<ion-nav-buttons side="right">
-	  <a ui-sref="tab.add-message" class="button button-icon icon iconfont icon-jiahao bgg-nav-right-icon"></a>
+		<a ui-sref="tab.add-message" class="button button-icon icon iconfont icon-jiahao bgg-nav-right-icon"></a>
 	</ion-nav-buttons>
-  <ion-content>
-  	<div class="bgg-message-list-box">
-  		<!--<p class="text-left">4月17日 星期一</p>-->
-  		<div class="bgg-message-list-item" ng-repeat="message in messages">
-  			<p class="bgg-message-list-item-body">{{message.Message_content}}</p>
+	<ion-content>
+		<div class="bgg-message-list-box">
+			<!--<p class="text-left">4月17日 星期一</p>-->
+			<div class="bgg-message-list-item" ng-repeat="message in messages">
+				<p class="bgg-message-list-item-body">{{message.Message_content}}</p>
 				<div class="bgg-message-list-item-info">
-					<span>{{message.Message_date}} · {{message.ThumbsUp_count}}人点赞</span>
-					<span class="bgg-message-list-item-info-dianzan" ng-click="deleteMessage({{message.Message_ID}})"><i class="iconfont icon-shanchu"></i>删除</span>
-				</div> 
+					<span>{{message.Message_date}} · {{message.ThumbsUp_count}}人点赞{{message.Message_ID}}</span>
+					<span class="bgg-message-list-item-info-dianzan" ng-click="deleteMessage(message)"><i class="iconfont icon-shanchu"></i>删除</span>
+				</div>
 			</div>
-  	</div>
-  </ion-content>
+		</div>
+	</ion-content>
 </ion-view>

@@ -1,27 +1,22 @@
 <ion-view view-title="详情" hide-tabs="true">
 	<ion-nav-buttons side="right">
-	  <a class="button button-icon icon iconfont icon-shanchu bgg-nav-right-icon"></a>
-	  <a class="button button-icon icon iconfont icon-fankui bgg-nav-right-icon"></a>
+		<a class="button button-icon icon iconfont icon-shanchu bgg-nav-right-icon"></a>
+		<a class="button button-icon icon iconfont icon-fankui bgg-nav-right-icon"></a>
+		<!--<a class="button button-icon icon iconfont bgg-nav-right-icon" ng-class="{true: 'icon-biaoxingfill', false: 'icon-biaoxing'}[course.is_collection]" ng-click="collection(course)"></a>-->
 	</ion-nav-buttons>
-  <ion-content>
-  	<div class="bgg-detail-title text-center">
-  		<img src="http://imgs.shougongke.com///course/cover/201704/11/17841726_1491875684_rtw2p6rbhr.jpg@!web_course_593"/>
-  		<h3>墨兰花水彩画教程</h3>
-  		<p>作者 | 当然是选择</p>
-  		<p class="text-left">获多福300克细纹、36色樱花固体水彩颜料、调色盘、干布一块、红胖子水彩笔最小号、劲草毛笔大中小号、可塑橡皮一块</p>
-  	</div>
-  	<div class="bgg-detail-box">
-  		<div class="bgg-detail-buzhou">
-  			<h3 class="text-center">步骤1</h3>
-  			<img src="http://imgs.shougongke.com//course/17841726/409063/1491875934_dkn5de65mz.jpg"/>
-  			<p>36色樱花固体水彩颜料，调色盘，干布一块，自动铅笔一只，红胖子水彩笔最小号，劲草毛笔大中小号，可塑橡皮一块。</p>
-  		</div>
-  		<div class="bgg-detail-buzhou">
-  			<h3 class="text-center">步骤2</h3>
-  			<img src="http://imgs.shougongke.com//course/17841726/409063/1491875934_d666n88w66.jpg"/>
-  			<p>先用铅笔勾画花卉形状，从主体花卉画起，定好花卉基本位置以后，添加花枝和花苞。
-在构图的时候，注意主次，铅笔稿不用太过细致，大多位置点到为止，上色之前可轻轻擦弱线稿，保留淡淡的印记，这样画起来比较干净。</p>
-  		</div>
-  	</div>
-  </ion-content>
+	<ion-content>
+		<div class="bgg-detail-title text-center">
+			<img src="{{url + course.Sy_img}}" />
+			<h3>{{course.Course_Name}}</h3>
+			<!--<p>作者 | {{course.User_NickName}} <i class="iconfont" ng-class="{true: 'icon-xihuanfill', false: 'icon-xihuan'}[course.is_follow]" ng-click="follow(course)"></i></p>-->
+			<p>{{course.Material_Tool}}</p>
+		</div>
+		<div class="bgg-detail-box">
+			<div class="bgg-detail-buzhou" ng-repeat="step in steps">
+				<h3 class="text-center">第{{$index + 1}}步</h3>
+				<img src="{{url + step.step_img}}" />
+				<p>{{step.step_describes}}</p>
+			</div>
+		</div>
+	</ion-content>
 </ion-view>

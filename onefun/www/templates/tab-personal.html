@@ -1,29 +1,25 @@
 <ion-view view-title="个人中心">
 	<ion-nav-buttons side="right">
-	  <!--<a class="button iconfont icon-others bgg-nav-right-icon"></a>-->
-	  <a class="button button-icon icon iconfont icon-guanbi1" ng-click="quitlogin()"></a>
+	  <a ng-if="isLogin" class="button button-icon icon iconfont icon-guanbi1 bgg-nav-right-icon" ng-click="quitlogin()"></a>
 	</ion-nav-buttons>
   <ion-content>
   	<div class="bgg-personal-info text-center" ng-click="goEL()">
   		<h3 class="" ng-if="!isLogin">未登陆</h3>
-  		<h3 class="" ng-if="isLogin" ng-bind="user.User_NiclkName"></h3>
+  		<h3 class="" ng-if="isLogin" ng-bind="user.user_nickname"></h3>
   		<p class="" ng-if="!isLogin">点击登录<i class="iconfont icon-xiangyou1"></i></p>
   		<p class="" ng-if="isLogin">修改昵称<i class="iconfont icon-fankui"></i></p>
   	</div>
-  	<!--<div class="bgg-personal-info text-center" ui-sref="tab.login">
-  		<h3 class="">登录<i class="iconfont icon-xiangyou1"></i></h3>
-  	</div>-->
    <div class="row bgg-personal-model">
    	<a href="#/tab/my-collection" class="col text-center bgg-personal-link">
-   		<h3>12</h3>
+   		<h3>{{user.collection_count || 0}}</h3>
    		<p>收藏</p>
    	</a>
    	<a href="#/tab/my-follow" class="col text-center bgg-personal-link">
-   		<h3>127</h3>
+   		<h3>{{user.follow_count || 0}}</h3>
    		<p>关注</p>
    	</a>
    	<a href="#/tab/my-message" class="col text-center bgg-personal-link">
-   		<h3>8</h3>
+   		<h3>{{user.message_count || 0}}</h3>
    		<p>留言</p>
    	</a>
    	<!--<a href="#/tab/my-message" class="col text-center">
@@ -32,27 +28,27 @@
    	</a>-->
    </div>
    <div class="text-center bgg-personal-list-box">
-			<p class="text-center bgg-title-text" ui-sref="tab.add-tutorial"><i class="iconfont icon-jiahao"></i>添加教程</p>
-			<a href="#/tab/my-tutorial-detail/132" class="bgg-personal-list-item">
-				<h4>莲花系列之一，衍纸荷花底托</h4>
-				<div class="bgg-home-list-item-info">
-					<p>12人收藏</p>
-				</div> 
-			</a>
-			
-			<a href="#/tab/my-tutorial-detail/132" class="bgg-personal-list-item">
-				<h4 class="">五乘迦叶绳五世迦南绳</h4>
-				<div class="bgg-home-list-item-info">
-					<p>124人收藏</p>
-				</div> 
-			</a>
-			
-			<a href="#/tab/my-tutorial-detail/132" class="bgg-personal-list-item">
-				<h4>原色植鞣革小猪包</h4>
-				<div class="bgg-home-list-item-info">
-					<p>12人收藏</p>
-				</div> 
-			</div>
-   </a>
+		<p class="text-center bgg-title-text" ui-sref="tab.add-tutorial"><i class="iconfont icon-jiahao"></i>添加教程</p>
+		<a href="#/tab/my-tutorial-detail/{{course.Course_ID}}" class="bgg-personal-list-item" ng-repeat="course in courses">
+			<h4>{{course.Course_Name}}</h4>
+			<div class="bgg-home-list-item-info">
+				<p>{{course.Collection_Number}}人收藏</p>
+			</div> 
+		</a>
+		
+		<!--<a href="#/tab/my-tutorial-detail/132" class="bgg-personal-list-item">
+			<h4 class="">五乘迦叶绳五世迦南绳</h4>
+			<div class="bgg-home-list-item-info">
+				<p>124人收藏</p>
+			</div> 
+		</a>
+		
+		<a href="#/tab/my-tutorial-detail/132" class="bgg-personal-list-item">
+			<h4>原色植鞣革小猪包</h4>
+			<div class="bgg-home-list-item-info">
+				<p>12人收藏</p>
+			</div> 
+		</div>-->
+   </div>
   </ion-content>
 </ion-view>

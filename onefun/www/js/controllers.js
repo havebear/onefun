@@ -1,83 +1,92 @@
 angular.module('starter.controllers', [])
 
-	.controller('HomeCtrl', function($scope, $http,$rootScope,Userinfo) {
-		Userinfo.isLogin();
-		$scope.url = server.url;
-		$scope.a = function() {
-			alert(1)
-		};
-		
-		$scope.apiurl = server.domain + "/course/gettop20";
-		
-		getCourse();
-
-		function getCourse() {
-			if($rootScope.isLogin){
-				$scope.apiurl = server.domain + "/course/gettop20?token=" + Userinfo.getToken();
-			}else{
-				$scope.apiurl = server.domain + "/course/gettop20";
-			}
-			console.log($scope.apiurl);
-			$http.get($scope.apiurl).then(function(response) {
-				$scope.courses = response.data.data;
-			});
-		}
-		//收藏图标默认是未收藏
-		$scope.isActive = true;
-	})
-
-	.controller('MessageCtrl', function($scope, $http, $ionicLoading, $ionicPopup, $timeout, $rootScope, Userinfo) {
+	.controller('HomeCtrl', function($scope, $http, $rootScope, $ionicLoading, Userinfo) {
 		Userinfo.isLogin();
 		$scope.show = function() {
 			$ionicLoading.show({
 				template: '加载中',
-				duration: 3000
+				animation: 'fade-in',
+   				showBackdrop: true,
 			}).then(function() {});
 		};
 
 		$scope.hide = function() {
-			$ionicLoading.hide().then(function() {});
+			$ionicLoading.hide({
+				noBackdrop: true,
+			}).then(function() {});
+		};
+		
+		$rootScope.url = server.url;
+
+		getCourse();
+
+		function getCourse() {
+			var apiurl = "";
+			if($rootScope.isLogin) {
+				apiurl = server.domain + "/course/gettop20?token=" + Userinfo.getToken();
+			} else {
+				apiurl = server.domain + "/course/gettop20";
+			}
+			$http.get(apiurl).then(function(response) {
+				$scope.courses = response.data.data;
+//				$scope.hide();
+			});
+		};
+	})
+
+	.controller('MessageCtrl', function($scope, $http, $ionicLoading, $timeout, $rootScope, Userinfo, Toast) {
+		//		Userinfo.isLogin();
+		$scope.show = function() {
+			$ionicLoading.show({
+				template: '加载中',
+				animation: 'fade-in',
+   				showBackdrop: true,
+			}).then(function() {});
 		};
 
-		$scope.show({
-			showBackdrop: false,
-		});
+		$scope.hide = function() {
+			$ionicLoading.hide({
+				noBackdrop: true,
+			}).then(function() {});
+		};
 
 		$scope.hasmore = true;
+		
 		var run = false; //模拟线程锁机制  防止多次请求 含义：是否正在请求。请注意，此处并非加入到了就绪队列，而是直接跳过不执行
-		$scope.posttext = {
+		
+		var posttext = {
 			number: 20,
 			index: 0,
 		};
 
-		var apiurl1 = apiurl1 = server.domain + "/message/getmessageshow?number=" + $scope.posttext.number + "&index=" + $scope.posttext.index;
+		var apiurl = "";
 
 		init(1);
 
 		function init(state) {
 			if($rootScope.isLogin) {
-				apiurl1 = server.domain + "/message/getmessageshow?number=" + $scope.posttext.number + "&index=" + $scope.posttext.index + "&token=" + Userinfo.getToken();
+				apiurl = server.domain + "/message/getmessageshow?number=" +posttext.number + "&index=" + posttext.index + "&token=" + Userinfo.getToken();
 			} else {
-				apiurl1 = server.domain + "/message/getmessageshow?number=" + $scope.posttext.number + "&index=" + $scope.posttext.index;
+				apiurl = server.domain + "/message/getmessageshow?number=" + posttext.number + "&index=" + posttext.index;
 			}
 			if(!run) {
 				run = true;
-				$http.get(apiurl1).then(function(response) {
+				$http.get(apiurl).then(function(response) {
 					run = false;
 					if(state == 3) {
 						$scope.messages = $scope.messages.concat(response.data.data);
 						if(response.data.data == null || response.data.data.length == 0) {
 							console.log("结束");
 							$scope.hasmore = false;
-
 						} else {
-							$scope.posttext.index++;
+							posttext.index++;
 						}
 					} else {
 						$scope.messages = response.data.data;
-						if(state == 1) {
-							$scope.hide();
-						}
+						posttext.index = 1;
+//						if(state == 1) {
+//							$scope.hide();
+//						}
 					}
 				});
 			}
@@ -85,7 +94,7 @@ angular.module('starter.controllers', [])
 		};
 
 		$scope.doRefresh = function() {
-			$scope.posttext.index = 0;
+			posttext.index = 0;
 			init(2);
 			$scope.hasmore = true;
 			$scope.$broadcast('scroll.refreshComplete');
@@ -96,77 +105,128 @@ angular.module('starter.controllers', [])
 			$scope.$broadcast('scroll.infiniteScrollComplete');
 		};
 
-		$scope.posttext2 = {
-			token: '',
-			message_id: 0,
-		}
-
 		$scope.thumbsup = function(message) {
-			$scope.posttext2.token = Userinfo.getToken();
-			$scope.posttext2.message_id = message.Message_ID;
-			console.log($scope.posttext2);
-			var apiurl2 = server.domain + '/message/thumbsup';
-			if(message.is_thumbsup) {
-				message.is_thumbsup = false;
-				console.log(message.is_thumbsup);
-				apiurl2 = server.domain + '/message/thumbsdown';
-			} else {
-				message.is_thumbsup = true;
-				console.log(message.is_thumbsup);
-				apiurl2 = server.domain + '/message/thumbsup';
-			}
-			$http({
-				url: apiurl2,
-				method: 'post',
-				data: $scope.posttext2,
-				headers: {
-					'Content-Type': 'application/json'
+			if(!$rootScope.isLogin){
+				Toast.toast("请登录后在点赞~");
+			}else{
+				var posttext2 = {
+					token: Userinfo.getToken(),
+					message_id: message.Message_ID,
 				}
-			}).then(function successCallback(response) {
-				message.ThumbsUp_count = response.data.data.Count_ThumbsUp;
 				if(message.is_thumbsup) {
-//					message.is_thumbsup = false;
-//					message.ThumbsUp_count--;
+					message.is_thumbsup = false;
+					message.ThumbsUp_count--;
+					apiurl = server.domain + '/message/thumbsdown';
 				} else {
-//					message.is_thumbsup = true;
-//					message.ThumbsUp_count++;
+					message.is_thumbsup = true;
+					message.ThumbsUp_count++;
+					apiurl = server.domain + '/message/thumbsup';
 				}
-			}, function errorCallback(response) {
-				console.log("点赞未成功");
-			});
-		}
+				$http({
+					url: apiurl,
+					method: 'post',
+					data: posttext2,
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(function successCallback(response) {
+					message.ThumbsUp_count = response.data.data.Count_ThumbsUp;
+					if(message.is_thumbsup){
+						message.is_thumbsup = true;
+						Toast.toast("已点赞");
+					}else{
+						message.is_thumbsup = false;
+						Toast.toast("已取消点赞");
+					}
+				}, function errorCallback(response) {
+					console.log("网络原因，点赞失败");
+				});
+			}
+		};
 	})
 
-	.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-		$scope.chat = Chats.get($stateParams.chatId);
-	})
+	.controller('PersonalCtrl', function($scope, $http, $rootScope, $state, $ionicPopup, $timeout, $ionicModal, Userinfo, Toast) {
+		$scope.show = function() {
+			$ionicLoading.show({
+				template: '加载中',
+				animation: 'fade-in',
+   				showBackdrop: true,
+			}).then(function() {});
+		};
 
-	.controller('PersonalCtrl', function($scope, $rootScope, $state, $ionicPopup, $timeout, $ionicModal, Userinfo) {
-		Userinfo.isLogin();
+		$scope.hide = function() {
+			$ionicLoading.hide({
+				noBackdrop: true,
+			}).then(function() {});
+		};
+		
 		$scope.user = {
 			User_ID: '',
 			User_NiclkName: ''
 		};
 
-		if($rootScope.isLogin) {
-			$scope.content = "修改昵称";
-			$scope.user.User_NiclkName = Userinfo.getName();
-			$scope.user.User_ID = Userinfo.getId();
-			console.log($rootScope.isLogin);
-		} else {
-			console.log($rootScope.isLogin);
-		}
 		$scope.settings = {
 			enableFriends: true
 		};
+
+		init();
+
+		function init() {
+//			Userinfo.isLogin();
+			if($rootScope.isLogin) {
+				$scope.content = "修改昵称";
+				$scope.user.user_nickname = Userinfo.getName();
+				$scope.user.User_ID = Userinfo.getId();
+				getUser();
+				getMyCourse();
+			} else {
+				return true;
+			}
+		};
+
+		function getUser() {
+			$http({
+				url: server.domain + "/user/getmyinfo",
+				method: 'post',
+				data: {
+					"token": Userinfo.getToken(),
+				},
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(function successCallback(response) {
+				$scope.user = response.data.message;
+			}, function errorCallback(response) {
+				Toast.toast("请检查你的网络连接");
+			});
+		}
+
+		function getMyCourse() {
+			$http({
+				url: server.domain + "/course/getmebuildcourse",
+				method: 'post',
+				data: {
+					token: Userinfo.getToken(),
+					index: 1,
+					number: 5,
+				},
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(function successCallback(response) {
+				$scope.courses = response.data.data;
+			}, function errorCallback(response) {
+				Toast.toast("请检查你的网络连接");
+			});
+		}
 
 		$scope.quitlogin = function() {
 			if(!$rootScope.isLogin) {
 				return true;
 			}
 			var confirmPopup = $ionicPopup.confirm({
-				title: '一坊',
-				template: '是否退出账号',
+				title: '来自OneFun的消息',
+				template: '是否退出登录？',
 				cancelText: '取消',
 				okText: '确定',
 				okType: 'button-dark'
@@ -174,9 +234,10 @@ angular.module('starter.controllers', [])
 
 			confirmPopup.then(function(res) {
 				if(res) {
+					$scope.user = null;
+					$scope.courses = null;
 					Userinfo.quitlogin();
-					console.log($rootScope.isLogin);
-					//	location.replace('#/tab/personal');
+					Toast.toast("已退出登录");
 				} else {
 					return true;
 				}
@@ -213,36 +274,120 @@ angular.module('starter.controllers', [])
 
 		// 当隐藏模型时执行动作
 		$scope.$on('modal.hide', function() {
-		// 执行动作
+			// 执行动作
 		});
 		// 当移动模型时执行动作
 		$scope.$on('modal.removed', function() {
-		// 执行动作
+			// 执行动作
 		});
 	})
 
-	.controller('TutorialDetailCtrl', function($scope, $state, $stateParams, $ionicViewSwitcher) {
-		//接受数据，是否收藏
-		$scope.isCollection = true;
-		$scope.isFollow = true;
-		$scope.collection = function() {
-			if($scope.isCollection) {
-				$scope.isCollection = false;
+	.controller('TutorialDetailCtrl', function($scope, $http, $state, $stateParams, $ionicViewSwitcher, $rootScope, Userinfo, Toast) {
+		//Userinfo.isLogin();
+		//$scope.url = server.url;
+		
+		var apiurl = "";
+		
+		init();
+
+		function init() {
+			if($rootScope.isLogin) {
+				apiurl = server.domain + "/course/getcourseinfo?course_id=" + $stateParams.id + "&token=" + Userinfo.getToken();
 			} else {
-				$scope.isCollection = true;
+				apiurl = server.domain + "/course/getcourseinfo?course_id=" + $stateParams.id;
+			}
+			$http.get(apiurl).then(function(response) {
+				$scope.course = response.data.data;
+				$scope.steps = response.data.data.step;
+				console.log($scope.steps);
+			});
+		};
+
+		$scope.collection = function(course) {
+			if(course.is_collection) {
+				apiurl = server.domain + "/course/delectcollection";
+			} else {
+				apiurl = server.domain + "/course/addcollection";
+			}
+			if($rootScope.isLogin) {
+				var posttext = {
+					token: Userinfo.getToken(),
+					Course_ID: $stateParams.id,
+				};
+				$http({
+					url: apiurl,
+					method: 'post',
+					data: posttext,
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(function successCallback(response) {
+					if(course.is_collection) {
+						course.is_collection = false;
+						Toast.toast("已取消收藏");
+					} else {
+						course.is_collection = true;
+						Toast.toast("已收藏");
+					}
+				}, function errorCallback(response) {
+					Toast.toast("请检查网络连接");
+				});
+			} else {
+				Toast.toast("你还没有登录");
 			}
 		}
-		$scope.follow = function() {
-			if($scope.isFollow) {
-				$scope.isFollow = false;
+
+		$scope.follow = function(course) {
+			if(course.is_follow) {
+				apiurl = server.domain + "/follow/del";
 			} else {
-				$scope.isFollow = true;
+				apiurl = server.domain + "/follow/add";
 			}
-		}
+			if($rootScope.isLogin) {
+				var posttext = {
+					token: Userinfo.getToken(),
+					Follow_User_ID: course.author_id
+				};
+				$http({
+					url: apiurl,
+					method: 'post',
+					data: posttext,
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(function successCallback(response) {
+					if(course.is_follow) {
+						course.is_follow = false;
+						Toast.toast("已取消关注");
+					} else {
+						course.is_follow = true;
+						Toast.toast("已关注");
+					}
+				}, function errorCallback(response) {
+					Toast.toast("请检查网络连接");
+				});
+			} else {
+				Toast.toast("你还没有登录");
+			}
+		};
 	})
 
-	.controller('TutorialListCtrl', function($scope, $state,$stateParams, $ionicHistory,$http,$rootScope,Userinfo) {
-		$scope.url = server.url;
+	.controller('TutorialListCtrl', function($scope, $state, $stateParams, $ionicHistory, $ionicLoading, $http, $rootScope, Userinfo, Toast) {
+		//		$scope.url = server.url;
+		$scope.show = function() {
+			$ionicLoading.show({
+				template: '加载中',
+				animation: 'fade-in',
+   				showBackdrop: true,
+			}).then(function() {});
+		};
+
+		$scope.hide = function() {
+			$ionicLoading.hide({
+				noBackdrop: true,
+			}).then(function() {});
+		};
+		
 		var type = $stateParams.type || 0;
 		var types = {
 			"hot": "本周热门",
@@ -256,100 +401,178 @@ angular.module('starter.controllers', [])
 			7: "模型",
 			8: "旧物"
 		};
+		
 		$scope.pagetitle = types[type];
-		$scope.apiurl = server.domain + "/course/getcoursetypeshow?typeid=" + $stateParams.type;
+		
 		getCourse();
 
 		function getCourse() {
-			if($rootScope.isLogin){
-				if($stateParams.type == "hot"){
-					$scope.apiurl = server.domain + "/course/getweekhotcourse?token=" + Userinfo.getToken();
-				}else if($stateParams.type == "friend"){
-//					$scope.apiurl = server.domain + "/course/getcoursetypeshow?typeid=" + $stateParams.type + "&token=" + Userinfo.getToken();
-				}else{
-					$scope.apiurl = server.domain + "/course/getcoursetypeshow?typeid=" + $stateParams.type + "&token=" + Userinfo.getToken();
+			var apiurl = "";
+			if($rootScope.isLogin) {
+				if($stateParams.type == "hot") {
+					apiurl = server.domain + "/course/getweekhotcourse?token=" + Userinfo.getToken();
+				} else if($stateParams.type == "friend") {
+					getMyFollowCourseList();
+				} else {
+					apiurl = server.domain + "/course/getcoursetypeshow?typeid=" + $stateParams.type + "&token=" + Userinfo.getToken();
 				}
-			}else{
-				if($stateParams.type == "hot"){
-					$scope.apiurl = server.domain + "/course/getweekhotcourse";
-				}else if($stateParams.type == "friend"){
-//					$state.go("tab.login");
+			} else {
+				if($stateParams.type == "hot") {
+					apiurl = server.domain + "/course/getweekhotcourse";
+				} else if($stateParams.type == "friend") {
 					alert("因为你没有登录,所以不给你看，其实是不知道怎么做，后面再想吧");
 					return true;
-				}else{
-					$scope.apiurl = server.domain + "/course/getcoursetypeshow?typeid=" + $stateParams.type;
+				} else {
+					apiurl = server.domain + "/course/getcoursetypeshow?typeid=" + $stateParams.type;
 				}
 			}
-			console.log($scope.apiurl);
-			$http.get($scope.apiurl).then(function(response) {
+			$http.get(apiurl).then(function(response) {
 				$scope.courses = response.data.data;
+			});
+		}
+
+		function getMyFollowCourseList() {
+			$http({
+				url: server.domain + "/course/getfollowcourse",
+				method: 'post',
+				data: {
+					"token": Userinfo.getToken()
+				},
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(function successCallback(response) {
+				$scope.courses = response.data.data;
+			}, function errorCallback(response) {
+				Toast.toast("请检查你的网络连接~");
 			});
 		}
 	})
 
-	.controller('MyFollowCtrl', function($scope, $ionicPopup, $timeout) {
-		$scope.showConfirm = function(name, id) {
+	.controller('MyFollowCtrl', function($scope, $http, $rootScope, $ionicPopup, $timeout, $ionicHistory, Userinfo, Toast) {
+		//		Userinfo.isLogin();
+		$scope.show = function() {
+			$ionicLoading.show({
+				template: '加载中',
+				animation: 'fade-in',
+   				showBackdrop: true,
+			}).then(function() {});
+		};
+
+		$scope.hide = function() {
+			$ionicLoading.hide({
+				noBackdrop: true,
+			}).then(function() {});
+		};
+		init();
+
+		function init() {
+			if($rootScope.isLogin) {
+				getMyFollowUserList();
+			} else {
+				Toast.toast(" ╮(๑•́ ₃•̀๑)╭  初始化失败了~");
+			}
+		};
+
+		function getMyFollowUserList() {
+			$http({
+				url: server.domain + "/follow/getfollowlist",
+				method: 'post',
+				data: {
+					"token": Userinfo.getToken(),
+				},
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(function successCallback(response) {
+				$scope.users = response.data.data;
+			}, function errorCallback(response) {
+				Toast.toast("请检查你的网络连接");
+			});
+		}
+
+		$scope.delfollow = function(user) {
 			var confirmPopup = $ionicPopup.confirm({
 				title: '一坊',
-				template: '是否取消关注' + name + '?',
-				cancelText: '返回',
+				template: '是否取消关注' + user.Follow_User_Nickname,
+				cancelText: '取消',
 				okText: '确定',
 				okType: 'button-dark'
 			});
-
 			confirmPopup.then(function(res) {
 				if(res) {
-					console.log('You are sure');
+					if($rootScope.isLogin) {
+						var posttext = {
+							token: Userinfo.getToken(),
+							Follow_User_ID: user.Follow_User_ID
+						};
+						$http({
+							url: server.domain + "/follow/del",
+							method: 'post',
+							data: posttext,
+							headers: {
+								'Content-Type': 'application/json'
+							}
+						}).then(function successCallback(response) {
+							if(response.data.status) {
+								console.log("已取消关注");
+								$scope.users;
+								$scope.users.splice($scope.users.indexOf(user), 1);
+							} else {
+								Toast.toast("网络好像有点小问题");
+							}
+						}, function errorCallback(response) {
+							Toast.toast("网络好像有点小问题");
+						});
+					} else {
+						Toast.toast("你还没有登录");
+					}
 				} else {
-					console.log('You are not sure');
+					Toast.toast('网络好像有点小问题');
 				}
 			});
 		};
 	})
 
-	.controller('MyMessageCtrl', function($scope, $http, $ionicPopup, $timeout, $ionicLoading, Userinfo) {
+	.controller('MyMessageCtrl', function($scope, $http, $ionicPopup, $timeout, $ionicLoading, Userinfo, Toast) {
 		$scope.show = function() {
 			$ionicLoading.show({
 				template: '加载中',
-				duration: 3000
-			}).then(function() {
-				console.log("The loading indicator is now displayed");
-			});
-		};
-		$scope.hide = function() {
-			$ionicLoading.hide().then(function() {
-				console.log("The loading indicator is now hidden");
-			});
+				animation: 'fade-in',
+   				showBackdrop: true,
+			}).then(function() {});
 		};
 
-		$scope.posttext = {
-			token: Userinfo.getToken(),
-			index: 0,
-			number: 20
+		$scope.hide = function() {
+			$ionicLoading.hide({
+				noBackdrop: true,
+			}).then(function() {});
 		};
 
 		getMeMessage();
 
 		function getMeMessage() {
-			$scope.show();
+			var posttext = {
+				token: Userinfo.getToken(),
+				index: 0,
+				number: 20
+			};
 			$http({
 				url: server.domain + '/message/getmemessageshow',
 				method: 'post',
-				data: $scope.posttext,
+				data: posttext,
 				headers: {
 					'Content-Type': 'application/json'
 				}
 			}).then(function(response) {
 				$scope.messages = response.data.data;
-				$scope.hide();
+//				$scope.hide();
 			});
 		}
 
-		$scope.deleteMessage = function(id) {
-			$scope.delposttext = {
-				token: Userinfo.getToken(),
-				message_id: id
-			}
+		$scope.deleteMessage = function(message) {
+			console.log(message);
+			console.log($scope.messages.indexOf(message));
 			var confirmPopup = $ionicPopup.confirm({
 				title: '一坊',
 				template: '删除留言',
@@ -357,19 +580,24 @@ angular.module('starter.controllers', [])
 				okText: '确定',
 				okType: 'button-dark'
 			});
-			console.log($scope.posttext);
 			confirmPopup.then(function(res) {
 				if(res) {
+					var posttext = {
+						token: Userinfo.getToken(),
+						message_id: message.Message_ID,
+					}
 					$http({
 						url: server.domain + '/message/deletemessage',
 						method: 'post',
-						data: $scope.delposttext,
+						data: posttext,
 						headers: {
 							'Content-Type': 'application/json'
 						}
 					}).then(function(response) {
 						if(response.status) {
-							getMeMessage();
+							console.log($scope.messages.length);
+							$scope.messages.splice($scope.messages.indexOf(message), 1);
+							Toast.toast("删除成功");
 						}
 					});
 				} else {
@@ -379,31 +607,156 @@ angular.module('starter.controllers', [])
 		}
 	})
 
-	.controller('MyCollectionCtrl', function($scope) {
+	.controller('MyCollectionCtrl', function($scope, $http, $rootScope, $ionicPopup, $timeout, Userinfo, Toast) {
+		//		$scope.url = server.url;
+		//		Userinfo.isLogin();
+		$scope.show = function() {
+			$ionicLoading.show({
+				template: '加载中',
+				animation: 'fade-in',
+   				showBackdrop: true,
+			}).then(function() {});
+		};
 
-	})
+		$scope.hide = function() {
+			$ionicLoading.hide({
+				noBackdrop: true,
+			}).then(function() {});
+		};
+		
+		init();
 
-	.controller('MyTutorialDetailCtrl', function($scope, $ionicPopup, $timeout) {
-		$scope.collection = function() {
-			var confirmPopup = $ionicPopup.confirm({
-				title: '一坊',
-				template: '取消收藏',
-				cancelText: '取消',
-				okText: '确定',
-				okType: 'button-dark'
-			});
+		function init() {
+			if($rootScope.isLogin) {
+				getMyCollectionCourseList();
+			} else {
+				Toast.toast(" ╮(๑•́ ₃•̀๑)╭  初始化失败了~");
+				return true;
+			}
+		}
 
-			confirmPopup.then(function(res) {
-				if(res) {
-					console.log('You are sure');
-				} else {
-					console.log('You are not sure');
+		function getMyCollectionCourseList() {
+			$http({
+				url: server.domain + "/course/getcollectioncourse",
+				method: 'post',
+				data: {
+					"token": Userinfo.getToken()
+				},
+				headers: {
+					'Content-Type': 'application/json'
 				}
+			}).then(function successCallback(response) {
+				$scope.courses = response.data.data;
+			}, function errorCallback(response) {
+				Toast.toast("请检查你的网络连接");
 			});
 		}
 	})
 
-	.controller('LoginCtrl', function($scope, $http, $state, $ionicHistory, $rootScope, Md5, Userinfo) {
+	.controller('MyTutorialDetailCtrl', function($scope, $http, $state, $stateParams, $ionicViewSwitcher, $rootScope, Userinfo,Toast) {
+		//		Userinfo.isLogin();
+		//		$scope.url = server.url;
+		$scope.show = function() {
+			$ionicLoading.show({
+				template: '加载中',
+				animation: 'fade-in',
+   				showBackdrop: true,
+			}).then(function() {});
+		};
+
+		$scope.hide = function() {
+			$ionicLoading.hide({
+				noBackdrop: true,
+			}).then(function() {});
+		};
+		init();
+
+		function init() {
+			var apiurl = "";
+			if($rootScope.isLogin) {
+				apiurl = server.domain + "/course/getcourseinfo?course_id=" + $stateParams.id + "&token=" + Userinfo.getToken();
+			} else {
+				apiurl = server.domain + "/course/getcourseinfo?course_id=" + $stateParams.id;
+			}
+			$http.get(apiurl).then(function(response) {
+				$scope.course = response.data.data;
+				$scope.steps = response.data.data.step;
+				console.log($scope.steps);
+			});
+		}
+
+		$scope.collection = function(course) {
+			var apiurl = "";
+			if(course.is_collection) {
+				apiurl = server.domain + "/course/delectcollection";
+			} else {
+				apiurl = server.domain + "/course/addcollection";
+			}
+			if($rootScope.isLogin) {
+				var posttext = {
+					token: Userinfo.getToken(),
+					Course_ID: $stateParams.id
+				};
+				$http({
+					url: apiurl,
+					method: 'post',
+					data: posttext,
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(function successCallback(response) {
+					if(course.is_collection) {
+						course.is_collection = false;
+						Toast.toast("已取消收藏");
+					} else {
+						course.is_collection = true;
+						Toast.toast("已收藏");
+					}
+				}, function errorCallback(response) {
+					Toast.toast("请检查网络连接");
+				});
+			} else {
+				Toast.toast("你还没有登录");
+			}
+		}
+
+		$scope.follow = function(course) {
+			var apiurl = "";
+			if(course.is_follow) {
+				apiurl = server.domain + "/follow/del";
+			} else {
+				apiurl = server.domain + "/follow/add";
+			}
+			if($rootScope.isLogin) {
+				var posttext = {
+					token: Userinfo.getToken(),
+					Follow_User_ID: course.author_id
+				};
+				$http({
+					url: apiurl,
+					method: 'post',
+					data: posttext,
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(function successCallback(response) {
+					if(course.is_follow) {
+						course.is_follow = false;
+						Toast.toast("已取消关注");
+					} else {
+						course.is_follow = true;
+						Toast.toast("已关注");
+					}
+				}, function errorCallback(response) {
+					Toast.toast("请检查网络连接");
+				});
+			} else {
+				Toast.toast("你还没有登录");
+			}
+		}
+	})
+
+	.controller('LoginCtrl', function($scope, $http, $state, $ionicHistory, $rootScope, Md5, Userinfo, Toast) {
 		$scope.originalpwd = '';
 		$scope.formData = {
 			user_accountnumber: '',
@@ -425,11 +778,10 @@ angular.module('starter.controllers', [])
 				Userinfo.setToken($scope.data.token);
 				Userinfo.setId($scope.data.User_ID);
 				Userinfo.setName($scope.data.User_NiclkName);
-				console.log(response);
 				$state.go("tab.personal");
 				$rootScope.isLogin = true;
+				Toast.toast("登录成功，正在跳转~");
 				//$ionicHistory.goBack();
-				$state.go("tab.personal");
 			});
 		}
 	})
@@ -459,29 +811,33 @@ angular.module('starter.controllers', [])
 
 	.controller('AddTutorialCtrl', function($scope, $http, $ionicPopup, $timeout, $ionicHistory, Userinfo, jsonToStr) {
 		$scope.course = {
-			course_img: '',
-			course_name: '',
-			type: '',
-			course_material: '',
-			steps: [{
-					img: '',
-					describe: ''
+			Sy_img: '000',
+			Course_Name: '教程名称',
+			Material_Tool: '材料和工具',
+			type_id: '2',
+			step: [{
+					step_order: "1",
+					step_img: '111',
+					step_describes: '第一步内容'
 				},
 				{
-					img: '',
-					describe: ''
+					step_order: "2",
+					step_img: '222',
+					step_describes: '第二步内容'
 				},
 				{
-					img: '',
-					describe: ''
+					step_order: "3",
+					step_img: '333',
+					step_describes: '第三部内容'
 				}
 			]
 		};
 		//添加一个步骤
 		$scope.addStep = function() {
 			var nextstep = {
-				img: '',
-				describe: ''
+				step_order: '',
+				step_img: '',
+				step_describes: ''
 			}
 			$scope.course.steps.push(nextstep);
 		}
@@ -503,13 +859,14 @@ angular.module('starter.controllers', [])
 			confirmPopup.then(function(res) {
 				if(res) {
 					$http({
-						url: server.domain + '/message/add',
+						url: server.domain + "/course/add",
 						method: 'post',
 						data: $scope.course,
 						headers: {
 							'Content-Type': 'application/json'
 						}
 					}).then(function(response) {
+						console.log($scope.course);
 						$ionicHistory.goBack();
 					});
 				} else {
@@ -519,8 +876,7 @@ angular.module('starter.controllers', [])
 		}
 	})
 
-	.controller('AddMessageCtrl', function($scope, $http, $ionicPopup, $timeout, $ionicHistory, Userinfo) {
-		console.log(Userinfo.getToken());
+	.controller('AddMessageCtrl', function($scope, $http, $ionicPopup, $ionicHistory, $timeout, Userinfo, Toast) {
 		$scope.message = {
 			token: Userinfo.getToken(),
 			message_content: ''
@@ -544,6 +900,7 @@ angular.module('starter.controllers', [])
 							'Content-Type': 'application/json'
 						}
 					}).then(function(response) {
+						Toast.toast("留言发布成功");
 						$ionicHistory.goBack();
 					});
 				} else {

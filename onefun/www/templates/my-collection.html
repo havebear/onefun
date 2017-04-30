@@ -1,6 +1,22 @@
 <ion-view view-title="收藏" hide-tabs="true">
   <ion-content padding="true">
   	<div class="bgg-tutorial-list-box">
+			<div class="bgg-tutorial-list-item" ng-repeat="course in courses">
+					<a href="#/tab/my-tutorial-detail/{{course.Course_ID}}">
+					<!--<a ui-sref="tab.tutorial-detail">-->
+						<img src="{{url + course.Sy_Img}}"/>
+						<h4>{{course.Course_Name}}</h4>
+					</a>
+					<div class="bgg-tutorial-list-item-info">
+						<span>{{course.User_NiclkName}} · {{course.Course_date}}</span>
+						<span class="bgg-tutorial-list-item-info-xihuan" ng-click="a()">
+							<i class="iconfont" ng-class="{true: 'icon-biaoxingfill', false: 'icon-biaoxing'}[course.is_collection]"></i>{{course.Collection_Number}}
+						</span>
+					</div> 
+				</div>
+			</div>
+		</div>
+  	<!--<div class="bgg-tutorial-list-box">
 		<div class="bgg-tutorial-list-item">
 			<a href="#/tab/my-tutorial-detail/132">
 				<h4>传艺计划第二期2.10已正式开启</h4>
@@ -11,9 +27,9 @@
 					<i class="iconfont icon-biaoxingfill"></i>已收藏
 				</span>
 			</div>
-		</div>
+		</div>-->
 
-		<div class="bgg-tutorial-list-item">
+		<!--<div class="bgg-tutorial-list-item">
 			<a href="#/tab/my-tutorial-detail/132">
 				<h4>点匠令！手工客×拾艺学堂 扶植独立手艺人计划</h4>
 			</a>
@@ -24,6 +40,6 @@
 				</span>
 			</div>
 		</div>
-		</div>
+		</div>-->
   </ion-content>
 </ion-view>
