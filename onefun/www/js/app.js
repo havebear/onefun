@@ -27,7 +27,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
             $state.go("tab.login");//跳转到登录页
             event.preventDefault(); //阻止默认事件，即原本页面的加载
         }
-    })
+    });
   });
 })
 

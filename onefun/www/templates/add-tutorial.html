@@ -4,17 +4,26 @@
 	</ion-nav-buttons>
   <ion-content>
   	<div class="add-tutorial-addimg">
-  		<p>作品封面</p>
+  		<img src="../img/img.jpg" ng-click="addimg(course)"/>
   	</div>
   	
   	<div class="add-tutorial-info" ng-init="order=0">
-  		<textarea rows="1" class="add-tutorial-textarea add-tutorial-textarea-title" placeholder="写下你的作品名称吧" ng-model="course.Course_Name"></textarea>
+  		<textarea rows="1" class="add-tutorial-textarea add-tutorial-textarea-title" row="2" placeholder="写下你的作品名称" ng-model="course.Course_Name"></textarea>
+            <select>
+              <option>布艺</option>
+              <option selected="">模型</option>
+              <option>剪纸</option>
+            </select>
   		<h4>工具和材料</h3>
-  		<textarea class="add-tutorial-textarea" placeholder="所需工具和原料" ng-model="course.courseMaterial_Tool_material"></textarea>
+  		<textarea class="add-tutorial-textarea" placeholder="所需工具和原料" ng-model="course.Material_Tool"></textarea>
   		<div class="add-tutorial-step" ng-repeat="step in course.step">
-  			<h4>第{{ $index + 1}}步</h3>
+  			<h4>
+  				第
+  				<span ng-bind="step.step_order">{{ $index + 1}}<span>
+  				步
+  			</h4>
   			<div class="add-tutorial-addimg">
-		  		步骤图
+		  		<img src="../img/img2.jpg" ng-click="addimg(course)"/>
 		  	</div>
 		  	<textarea class="add-tutorial-textarea" placeholder="添加步骤和说明" ng-model="step.step_describes"></textarea>
 		  	<button class="button button-assertive" ng-click="deleteStep(step)">删除步骤</button>

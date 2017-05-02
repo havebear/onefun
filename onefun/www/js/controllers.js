@@ -780,7 +780,7 @@ angular.module('starter.controllers', [])
 				Userinfo.setName($scope.data.User_NiclkName);
 				$state.go("tab.personal");
 				$rootScope.isLogin = true;
-				Toast.toast("登录成功，正在跳转~");
+				Toast.toast("登录成功~");
 				//$ionicHistory.goBack();
 			});
 		}
@@ -811,24 +811,24 @@ angular.module('starter.controllers', [])
 
 	.controller('AddTutorialCtrl', function($scope, $http, $ionicPopup, $timeout, $ionicHistory, Userinfo, jsonToStr) {
 		$scope.course = {
-			Sy_img: '000',
-			Course_Name: '教程名称',
-			Material_Tool: '材料和工具',
-			type_id: '2',
+			Sy_img: '',
+			Course_Name: '',
+			Material_Tool: '',
+			type_id: '1',
 			step: [{
-					step_order: "1",
-					step_img: '111',
-					step_describes: '第一步内容'
+					step_order: '1',
+					step_img: '',
+					step_describes: ''
 				},
 				{
-					step_order: "2",
-					step_img: '222',
-					step_describes: '第二步内容'
+					step_order: '2',
+					step_img: '',
+					step_describes: ''
 				},
 				{
-					step_order: "3",
-					step_img: '333',
-					step_describes: '第三部内容'
+					step_order: '3',
+					step_img: '',
+					step_describes: ''
 				}
 			]
 		};
@@ -839,12 +839,17 @@ angular.module('starter.controllers', [])
 				step_img: '',
 				step_describes: ''
 			}
-			$scope.course.steps.push(nextstep);
+			$scope.course.step.push(nextstep);
 		}
 		//删除当前步骤
 		$scope.deleteStep = function(step) {
-			$scope.course.steps.splice($scope.course.steps.indexOf(step), 1);
+			$scope.course.step.splice($scope.course.step.indexOf(step), 1);
 		}
+		
+		$scope.addimg = function(){
+			
+		}
+		
 		$scope.submit = function() {
 			console.log($scope.course);
 			$scope.course.token = Userinfo.getToken();
