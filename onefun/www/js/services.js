@@ -21,9 +21,40 @@ angular.module('starter.services', [])
 			}
 		};
 	})
-	
-	.service('Toast', function($rootScope,$cordovaToast) {
-		this.toast = function(str){
+
+	.directive('contenteditable', function() {　　
+		return {　　　　
+			restrict: 'A', // 只用于属性
+			　　　　require: '?ngModel', // get a hold of NgModelController
+			　　link: function(scope, element, attrs, ngModel) {　　　　
+				if(!ngModel) {　　　　　　
+					return;　　　　
+				}　　　　 // Specify how UI should be updated
+				　　　　
+				ngModel.$render = function() {　　　　　　
+					element.html(ngModel.$viewValue || '');　　　　
+				};　　　　 // Listen for change events to enable binding
+				　　　　
+				element.on('blur keyup change', function() {　　　　　　
+					scope.$apply(readViewText);　　　　
+				});　　　　 // No need to initialize, AngularJS will initialize the text based on ng-model attribute
+				　　　　 // Write data to the model
+				　　　　
+				function readViewText() {　　　　　　
+					var html = element.html();　　　　　　 // When we clear the content editable the browser leaves a <br> behind
+					　　　　　　 // If strip-br attribute is provided then we strip this out
+					　　　　　　
+					if(attrs.stripBr && html === '<br>') {　　　　　　　　
+						html = '';　　　　　　
+					}　　　　　　
+					ngModel.$setViewValue(html);　　　　
+				}　　
+			}
+		};
+	})
+
+	.service('Toast', function($rootScope, $cordovaToast) {
+		this.toast = function(str) {
 			try {
 				$cordovaToast.showLongTop(str).then(function(success) {
 					// success  
@@ -35,7 +66,7 @@ angular.module('starter.services', [])
 			}
 		}
 	})
-	
+
 	.service('jsonToStr', function() {
 		this.transform = function(jsonData) {
 			var string = '';
@@ -52,22 +83,24 @@ angular.module('starter.services', [])
 		};
 	})
 
-	.service('Userinfo', function($rootScope,$http) {
+	.service('Userinfo', function($rootScope, $http) {
 		this.isLogin = function() {
 			if(window.localStorage[cache.userid]) {
 				$rootScope.isLogin = true;
 				$http({
 					url: server.domain + "/user/checklogin",
 					method: 'post',
-					data: {"token":window.localStorage[cache.token]},
+					data: {
+						"token": window.localStorage[cache.token]
+					},
 					headers: {
 						'Content-Type': 'application/json'
 					}
 				}).then(function successCallback(response) {
-					console.log(response.data.status);
-					if(response.data.status){
+					//					console.log(response.data.status);
+					if(response.data.status) {
 						$rootScope.isLogin = true;
-					}else{
+					} else {
 						$rootScope.isLogin = false;
 					}
 				}, function errorCallback(response) {
@@ -80,6 +113,25 @@ angular.module('starter.services', [])
 		this.quitlogin = function() {
 			window.localStorage.clear();
 			$rootScope.isLogin = false;
+			$http({
+				url: server.domain + "/user/loginout",
+				method: 'post',
+				data: {
+					"token": window.localStorage[cache.token]
+				},
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(function successCallback(response) {
+				//					console.log(response.data.status);
+				if(response.data.status) {
+					$rootScope.isLogin = false;
+				} else {
+					$rootScope.isLogin = false;
+				}
+			}, function errorCallback(response) {
+				$rootScope.isLogin = false;
+			});
 		}
 		this.setName = function(name) {
 			window.localStorage[cache.niclkname] = name;
@@ -87,7 +139,7 @@ angular.module('starter.services', [])
 			console.log(window.localStorage[cache.niclkname]);
 		};
 		this.getName = function() {
-			if(!window.localStorage[cache.niclkname]){
+			if(!window.localStorage[cache.niclkname]) {
 				return null;
 			}
 			return window.localStorage[cache.niclkname];
@@ -98,7 +150,7 @@ angular.module('starter.services', [])
 			console.log(window.localStorage[cache.userid]);
 		};
 		this.getId = function() {
-			if(!window.localStorage[cache.userid]){
+			if(!window.localStorage[cache.userid]) {
 				return null;
 			}
 			return window.localStorage[cache.userid];
@@ -109,7 +161,7 @@ angular.module('starter.services', [])
 			console.log(window.localStorage[cache.token]);
 		};
 		this.getToken = function() {
-			if(!window.localStorage[cache.token]){
+			if(!window.localStorage[cache.token]) {
 				return null;
 			}
 			return window.localStorage[cache.token];

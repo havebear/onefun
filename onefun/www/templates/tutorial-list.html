@@ -1,20 +1,21 @@
 <ion-view view-title="{{pagetitle}}" hide-tabs="true">
-	<ion-content class="padding">
+	<ion-content class="padding" lazy-scroll>
 		<div class="bgg-tutorial-list-box">
 			<div class="bgg-tutorial-list-item" ng-repeat="course in courses">
-					<a href="#/tab/tutorial-detail/{{course.Course_ID}}">
-					<!--<a ui-sref="tab.tutorial-detail">-->
-						<img src="{{url + course.Sy_Img}}"/>
-						<h4>{{course.Course_Name}}</h4>
-					</a>
-					<div class="bgg-tutorial-list-item-info">
-						<span>{{course.User_NiclkName}} · {{course.Course_date}}</span>
-						<span class="bgg-tutorial-list-item-info-xihuan" ng-click="a()">
-							<i class="iconfont" ng-class="{true: 'icon-biaoxingfill', false: 'icon-biaoxing'}[course.is_collection]"></i>{{course.Collection_Number}}
-						</span>
-					</div> 
+				<a href="#/tab/tutorial-detail/{{course.Course_ID}}">
+					<div class="bgg-tutorial-list-item-img">
+						<img image-lazy-src="{{url + course.Sy_Img}}" />
+					</div>
+					<h4>{{course.Course_Name}}</h4>
+				</a>
+				<div class="bgg-tutorial-list-item-info">
+					<span>{{course.User_NiclkName}} · {{course.Course_date}}</span>
+					<span class="bgg-tutorial-list-item-info-xihuan" ng-click="a()">
+						<i class="iconfont" ng-class="{true: 'icon-biaoxingfill', false: 'icon-biaoxing'}[course.is_collection]"></i>{{course.Collection_Number}}
+					</span>
 				</div>
 			</div>
+		</div>
 		</div>
 		<!--<div class="bgg-tutorial-list-box">
 			<div class="bgg-tutorial-list-item">

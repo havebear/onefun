@@ -36,17 +36,23 @@
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
+    <script src="lib/ionic-image-lazy-load/ionic-image-lazy-load.js"></script>
     <script type="text/javascript">
-		  document.addEventListener("deviceready", onDeviceReady, false);  
+		  document.addEventListener("deviceready", onDeviceReady, false);
+		  
 		  function onDeviceReady() {  
 		    navigator.splashscreen.hide();  
 		  }
-		  document.addEventListener("deviceready", function () {   
-			    $cordovaPlugin.someFunction().then(success, error); 
+		  
+		  document.addEventListener("deviceready", function () {
+			  $cordovaPlugin.someFunction().then(success, error);
 			}, false);
-			$ionicPlatform.ready(function() {  
-			      $cordovaPlugin.someFunction().then(success, error); 
+
+			
+			$ionicPlatform.ready(function() {
+			  $cordovaPlugin.someFunction().then(success, error);
 			});
+			
 		</script>  
   </head>
   <body ng-app="starter">

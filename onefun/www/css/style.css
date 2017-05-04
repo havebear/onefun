@@ -29,14 +29,16 @@
 .bgg-home-hot-friend img{width:100% !important;opacity: 0.9;}
 
 .bgg-tutorial-list-box{/*padding-top: 20px;*/}
-.bgg-tutorial-list-item{margin-top: 10px;padding-bottom: 5px;}
+.bgg-tutorial-list-item{margin-top: 12px;padding-bottom: 0px;border-bottom: 1px dashed #ddd;}
 .bgg-tutorial-list-box .bgg-tutorial-list-item:nth-child(1){margin-top: 0;}
 .bgg-tutorial-list-item a{display:block;text-decoration: none;}
-.bgg-tutorial-list-item h4{font-size: 18px;margin: 5px 0;}
+.bgg-tutorial-list-item h4{font-size: 18px;margin: 10px 0 0 0;padding: 0;}
 .bgg-tutorial-list-box img{width: 100%;}
-.bgg-tutorial-list-item-info{height: 40px;color: #666;line-height: 40px;}
+.bgg-tutorial-list-item-info{height: 36px;color: #666;line-height: 36px;}
 .bgg-tutorial-list-item-info-xihuan{float: right;padding: 0 10px;padding-right: 0;}
 .bgg-tutorial-list-item-info-xihuan i{font-size: 18px;}
+.bgg-tutorial-list-item-img{height: 220px;overflow: hidden;display: -webkit-flex; /* Safari */display: flex;align-items:center;background: #CCCCCC;}
+.bgg-tutorial-list-item-img img{vertical-align:middle;display:table-cell;}
 
 .bgg-message-list-box{padding: 0 10px;}
 .bgg-message-list-item{border-bottom: 1px dashed #ddd;margin: 10px 0;padding-bottom: 5px;}
@@ -78,13 +80,25 @@
 .textarea{width:100%;min-height: 100%;border:none;outline:none;resize:none;overflow: hidden;font-size: 18px;line-height: 24px;}
 
 /*添加教程*/
-.add-tutorial-addimg{position: relative;width: 100%;}
-.add-tutorial-addimg img{width: 100%;}
-.add-tutorial-addimg p{display:block;width:100%;position: absolute;margin:20px auto;bottom: 20px;font-size: 1rem;text-align: center;color: #f3f3f3;}
-.add-tutorial-info{padding: 10px;}
+.add-tutorial-addimg{width: 100%;min-height: 180px;padding: 0 !important;background: #ccc url(../img/bz.png) no-repeat center;background-size:80px;display:table;}
+.add-tutorial-addimg:nth-child(1){background: #ccc url(../img/fm.png) no-repeat center;background-size:80px;}
+.add-tutorial-addimg img{width: 100%;margin: 0;padding: 0;border: 0;float: left;}
+.add-tutorial-addimg span{display:none;text-align: center;color: #999;vertical-align:middle;display:table-cell;font-size: 20px;}
+.upimg{width: 100%;}
+.add-tutorial-info{padding:0 10px;}
+.add-tutorial-info h4{color: #666;}
+.add-tutorial-type{width:100%;height: 40px;line-height: 40px;}
+.add-tutorial-type span{font-size: 16px;}
+.add-tutorial-type i{}
+.add-tutorial-right-btn{float: right;font-size: 14px !important;color: #666;}
+.add-tutorial-type-select{height:100%;float: right;border: none;color: #666;color: #333;font-size: 16px;background: none;}
 /*.add-tutorial-info h4{text-align: center;}*/
-.add-tutorial-step{padding-top: 20px;}
-.add-tutorial-textarea{width:100%;border:none;outline:none;resize:none;font-size: 14px; color: #333333;}
-.add-tutorial-textarea-title{min-height: 110px;text-align: center;font-size: 20px;overflow: hidden;line-height: 28px;font-weight: bold;}
+/*.add-tutorial-step{padding-top: 20px;}*/
+.add-tutorial-textarea{width:100%;min-height: 30px;padding: 10px 0;border:none;font-size: 16px; color: #333333;line-height: 22px;-webkit-user-select:text;}
+.add-tutorial-textarea:empty:before{content: attr(placeholder);color:#666;}
+.add-tutorial-textarea:focus:before{content:none;}
+.add-tutorial-textarea-title{padding:20px 0;text-align: center;font-size: 22px;overflow: hidden;line-height: 28px;}
+.add-tutorial-textarea-title:empty:before{content: attr(placeholder);color:#999;font-weight: 500;}
+
 
 .updatename-box{background: #FFF;width: 100%;height: 100%;}

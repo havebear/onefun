@@ -6,7 +6,7 @@ angular.module('starter.controllers', [])
 			$ionicLoading.show({
 				template: '加载中',
 				animation: 'fade-in',
-   				showBackdrop: true,
+				showBackdrop: true,
 			}).then(function() {});
 		};
 
@@ -15,7 +15,7 @@ angular.module('starter.controllers', [])
 				noBackdrop: true,
 			}).then(function() {});
 		};
-		
+
 		$rootScope.url = server.url;
 
 		getCourse();
@@ -29,7 +29,7 @@ angular.module('starter.controllers', [])
 			}
 			$http.get(apiurl).then(function(response) {
 				$scope.courses = response.data.data;
-//				$scope.hide();
+				//				$scope.hide();
 			});
 		};
 	})
@@ -40,7 +40,7 @@ angular.module('starter.controllers', [])
 			$ionicLoading.show({
 				template: '加载中',
 				animation: 'fade-in',
-   				showBackdrop: true,
+				showBackdrop: true,
 			}).then(function() {});
 		};
 
@@ -51,9 +51,9 @@ angular.module('starter.controllers', [])
 		};
 
 		$scope.hasmore = true;
-		
+
 		var run = false; //模拟线程锁机制  防止多次请求 含义：是否正在请求。请注意，此处并非加入到了就绪队列，而是直接跳过不执行
-		
+
 		var posttext = {
 			number: 20,
 			index: 0,
@@ -65,7 +65,7 @@ angular.module('starter.controllers', [])
 
 		function init(state) {
 			if($rootScope.isLogin) {
-				apiurl = server.domain + "/message/getmessageshow?number=" +posttext.number + "&index=" + posttext.index + "&token=" + Userinfo.getToken();
+				apiurl = server.domain + "/message/getmessageshow?number=" + posttext.number + "&index=" + posttext.index + "&token=" + Userinfo.getToken();
 			} else {
 				apiurl = server.domain + "/message/getmessageshow?number=" + posttext.number + "&index=" + posttext.index;
 			}
@@ -84,9 +84,9 @@ angular.module('starter.controllers', [])
 					} else {
 						$scope.messages = response.data.data;
 						posttext.index = 1;
-//						if(state == 1) {
-//							$scope.hide();
-//						}
+						//						if(state == 1) {
+						//							$scope.hide();
+						//						}
 					}
 				});
 			}
@@ -106,9 +106,9 @@ angular.module('starter.controllers', [])
 		};
 
 		$scope.thumbsup = function(message) {
-			if(!$rootScope.isLogin){
+			if(!$rootScope.isLogin) {
 				Toast.toast("请登录后在点赞~");
-			}else{
+			} else {
 				var posttext2 = {
 					token: Userinfo.getToken(),
 					message_id: message.Message_ID,
@@ -131,10 +131,10 @@ angular.module('starter.controllers', [])
 					}
 				}).then(function successCallback(response) {
 					message.ThumbsUp_count = response.data.data.Count_ThumbsUp;
-					if(message.is_thumbsup){
+					if(message.is_thumbsup) {
 						message.is_thumbsup = true;
 						Toast.toast("已点赞");
-					}else{
+					} else {
 						message.is_thumbsup = false;
 						Toast.toast("已取消点赞");
 					}
@@ -150,7 +150,7 @@ angular.module('starter.controllers', [])
 			$ionicLoading.show({
 				template: '加载中',
 				animation: 'fade-in',
-   				showBackdrop: true,
+				showBackdrop: true,
 			}).then(function() {});
 		};
 
@@ -159,7 +159,7 @@ angular.module('starter.controllers', [])
 				noBackdrop: true,
 			}).then(function() {});
 		};
-		
+
 		$scope.user = {
 			User_ID: '',
 			User_NiclkName: ''
@@ -172,7 +172,7 @@ angular.module('starter.controllers', [])
 		init();
 
 		function init() {
-//			Userinfo.isLogin();
+			//			Userinfo.isLogin();
 			if($rootScope.isLogin) {
 				$scope.content = "修改昵称";
 				$scope.user.user_nickname = Userinfo.getName();
@@ -207,8 +207,8 @@ angular.module('starter.controllers', [])
 				method: 'post',
 				data: {
 					token: Userinfo.getToken(),
-					index: 1,
-					number: 5,
+					index: 0,
+					number: 20,
 				},
 				headers: {
 					'Content-Type': 'application/json'
@@ -285,9 +285,9 @@ angular.module('starter.controllers', [])
 	.controller('TutorialDetailCtrl', function($scope, $http, $state, $stateParams, $ionicViewSwitcher, $rootScope, Userinfo, Toast) {
 		//Userinfo.isLogin();
 		//$scope.url = server.url;
-		
+
 		var apiurl = "";
-		
+
 		init();
 
 		function init() {
@@ -378,7 +378,7 @@ angular.module('starter.controllers', [])
 			$ionicLoading.show({
 				template: '加载中',
 				animation: 'fade-in',
-   				showBackdrop: true,
+				showBackdrop: true,
 			}).then(function() {});
 		};
 
@@ -387,7 +387,7 @@ angular.module('starter.controllers', [])
 				noBackdrop: true,
 			}).then(function() {});
 		};
-		
+
 		var type = $stateParams.type || 0;
 		var types = {
 			"hot": "本周热门",
@@ -401,9 +401,9 @@ angular.module('starter.controllers', [])
 			7: "模型",
 			8: "旧物"
 		};
-		
+
 		$scope.pagetitle = types[type];
-		
+
 		getCourse();
 
 		function getCourse() {
@@ -455,7 +455,7 @@ angular.module('starter.controllers', [])
 			$ionicLoading.show({
 				template: '加载中',
 				animation: 'fade-in',
-   				showBackdrop: true,
+				showBackdrop: true,
 			}).then(function() {});
 		};
 
@@ -539,7 +539,7 @@ angular.module('starter.controllers', [])
 			$ionicLoading.show({
 				template: '加载中',
 				animation: 'fade-in',
-   				showBackdrop: true,
+				showBackdrop: true,
 			}).then(function() {});
 		};
 
@@ -566,7 +566,7 @@ angular.module('starter.controllers', [])
 				}
 			}).then(function(response) {
 				$scope.messages = response.data.data;
-//				$scope.hide();
+				//				$scope.hide();
 			});
 		}
 
@@ -614,7 +614,7 @@ angular.module('starter.controllers', [])
 			$ionicLoading.show({
 				template: '加载中',
 				animation: 'fade-in',
-   				showBackdrop: true,
+				showBackdrop: true,
 			}).then(function() {});
 		};
 
@@ -623,7 +623,7 @@ angular.module('starter.controllers', [])
 				noBackdrop: true,
 			}).then(function() {});
 		};
-		
+
 		init();
 
 		function init() {
@@ -653,14 +653,14 @@ angular.module('starter.controllers', [])
 		}
 	})
 
-	.controller('MyTutorialDetailCtrl', function($scope, $http, $state, $stateParams, $ionicViewSwitcher, $rootScope, Userinfo,Toast) {
+	.controller('MyTutorialDetailCtrl', function($scope, $http, $state, $stateParams, $ionicViewSwitcher, $rootScope, Userinfo, Toast) {
 		//		Userinfo.isLogin();
 		//		$scope.url = server.url;
 		$scope.show = function() {
 			$ionicLoading.show({
 				template: '加载中',
 				animation: 'fade-in',
-   				showBackdrop: true,
+				showBackdrop: true,
 			}).then(function() {});
 		};
 
@@ -809,7 +809,7 @@ angular.module('starter.controllers', [])
 		};
 	})
 
-	.controller('AddTutorialCtrl', function($scope, $http, $ionicPopup, $timeout, $ionicHistory, Userinfo, jsonToStr) {
+	.controller('AddTutorialCtrl', function($scope, $http, $ionicPopup, $timeout, $ionicHistory, $cordovaImagePicker, $cordovaCamera,$ionicActionSheet, $cordovaFileTransfer,Userinfo, jsonToStr,Toast) {
 		$scope.course = {
 			Sy_img: '',
 			Course_Name: '',
@@ -845,11 +845,120 @@ angular.module('starter.controllers', [])
 		$scope.deleteStep = function(step) {
 			$scope.course.step.splice($scope.course.step.indexOf(step), 1);
 		}
-		
-		$scope.addimg = function(){
-			
+
+		$scope.images_list = [];
+
+		$scope.addimg = function(obj) {
+			$ionicActionSheet.show({
+				buttons: [{
+						text: '相机'
+					},
+					{
+						text: '图库'
+					}
+				],
+				cancelText: '关闭',
+				cancel: function() {
+					return true;
+				},
+				buttonClicked: function(index) {
+					switch(index) {
+						case 0:
+							takePhoto(obj);
+							break;
+						case 1:
+							pickImage(obj);
+							break;
+						default:
+							break;
+					}
+					return true;
+				}
+			});
+		};
+
+		var pickImage = function(obj) {
+			var options = {
+				maximumImagesCount: 1,
+				width: 720,
+				//					height: 0,
+				quality: 80
+			};
+
+			$cordovaImagePicker.getPictures(options)
+				.then(function(results) {
+					$scope.images_list.push(results[0]);
+					upImage(results[0],obj);
+					console.log(results[0]);
+					obj.locaimg = results[0];
+//					$scope.imgurl = results[0];
+				}, function(error) {
+					// error getting photos
+				});
 		}
-		
+
+		var takePhoto = function(obj) {
+			var options = {
+				//这些参数可能要配合着使用，比如选择了sourcetype是0，destinationtype要相应的设置
+				quality: 80, //相片质量0-100
+				destinationType: Camera.DestinationType.FILE_URI, //返回类型：DATA_URL= 0，返回作为 base64 編碼字串。 FILE_URI=1，返回影像档的 URI。NATIVE_URI=2，返回图像本机URI (例如，資產庫)
+				sourceType: Camera.PictureSourceType.CAMERA, //从哪里选择图片：PHOTOLIBRARY=0，相机拍照=1，SAVEDPHOTOALBUM=2。0和1其实都是本地图库
+				allowEdit: false, //在选择之前允许修改截图
+				encodingType: Camera.EncodingType.JPEG, //保存的图片格式： JPEG = 0, PNG = 1
+				targetWidth: 720, //照片宽度
+				targetHeight: 0, //照片高度
+				mediaType: 0, //可选媒体类型：圖片=0，只允许选择图片將返回指定DestinationType的参数。 視頻格式=1，允许选择视频，最终返回 FILE_URI。ALLMEDIA= 2，允许所有媒体类型的选择。
+				cameraDirection: 0, //枪后摄像头类型：Back= 0,Front-facing = 1
+				popoverOptions: CameraPopoverOptions,
+				saveToPhotoAlbum: true //保存进手机相册
+			};
+			$cordovaCamera.getPicture(options).then(function(imageData) {
+
+				CommonJs.AlertPopup(imageData);
+				obj.locaimg = imageData;
+				upImage(imageData,obj);
+				//image.src = "data:image/jpeg;base64," + imageData;
+			}, function(err) {
+				// error
+				CommonJs.AlertPopup(err.message);
+			});
+
+		}
+
+		//图片上传upImage（图片路径）
+		//http://ngcordova.com/docs/plugins/fileTransfer/  资料地址
+		var upImage = function(imageUrl,obj) {
+			document.addEventListener('deviceready', function() {
+				var url = server.domain + "/course/doupload";
+				var options = new FileUploadOptions();
+				options.fileKey = "img";
+//				options.headers = {'Content-Type': 'application/json'};
+				var params = {};
+				params.token = Userinfo.getToken();
+				options.params = params;
+				console.log(options.params);
+				$cordovaFileTransfer.upload(url, imageUrl, options)
+					.then(function(result) {
+						var res = JSON.parse(result.response);
+						console.log(res.data);
+						if(obj.type_id){
+							$scope.course.Sy_img = res.data;
+						}else{
+							obj.step_img = res.data;
+						}
+						
+						$scope.images_list.splice(0, $scope.images_list.length);
+					}, function(err) {
+						console.log(err);
+						console.log(options);
+						alert("网络原因上传失败~");
+					}, function(progress) {
+						// constant progress updates
+					});
+
+			}, false);
+		}
+
 		$scope.submit = function() {
 			console.log($scope.course);
 			$scope.course.token = Userinfo.getToken();
@@ -860,6 +969,11 @@ angular.module('starter.controllers', [])
 				okText: '确定',
 				okType: 'button-dark'
 			});
+			
+			delete $scope.course.locaimg;
+			for(var i = 0;i<$scope.course.step.length;i++){
+				delete $scope.course.step[i].locaimg;
+			}
 
 			confirmPopup.then(function(res) {
 				if(res) {
@@ -872,13 +986,15 @@ angular.module('starter.controllers', [])
 						}
 					}).then(function(response) {
 						console.log($scope.course);
+						Toast.toast("教程发布成功成功");
 						$ionicHistory.goBack();
 					});
 				} else {
 					return true;
 				}
 			});
-		}
+		};
+
 	})
 
 	.controller('AddMessageCtrl', function($scope, $http, $ionicPopup, $ionicHistory, $timeout, Userinfo, Toast) {

@@ -1,5 +1,5 @@
 <ion-view view-title="一坊">
-  <ion-content class="padding">
+  <ion-content class="padding" lazy-scroll>
    <div class="row bgg-home-grid-menu">
 			<a href="#/tab/tutorial-list/1" class="col text-center col-25 bgg-text-red">
 				<ul>  
@@ -84,8 +84,9 @@
 			<p class="text-center bgg-title-text">4月17日 星期一</p>
 			<div class="bgg-tutorial-list-item" ng-repeat="course in courses">
 				<a href="#/tab/tutorial-detail/{{course.Course_ID}}">
-				<!--<a ui-sref="tab.tutorial-detail">-->
-					<img src="{{url + course.Sy_Img}}"/>
+					<div class="bgg-tutorial-list-item-img">
+							<img image-lazy-src="{{url + course.Sy_Img}}" image-lazy-loader="lines"/>
+					</div>
 					<h4>{{course.Course_Name}}</h4>
 				</a>
 				<div class="bgg-tutorial-list-item-info">

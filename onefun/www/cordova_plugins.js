@@ -266,6 +266,14 @@ module.exports = [
         "id": "cordova-plugin-x-toast.tests",
         "file": "plugins/cordova-plugin-x-toast/test/tests.js",
         "pluginId": "cordova-plugin-x-toast"
+    },
+    {
+        "id": "cordova-plugin-image-picker.ImagePicker",
+        "file": "plugins/cordova-plugin-image-picker/www/imagepicker.js",
+        "pluginId": "cordova-plugin-image-picker",
+        "clobbers": [
+            "plugins.imagePicker"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -281,7 +289,8 @@ module.exports.metadata =
     "cordova-plugin-file": "4.3.2",
     "cordova-plugin-camera": "2.4.0",
     "cordova-plugin-file-transfer": "1.6.2",
-    "cordova-plugin-x-toast": "2.6.0"
+    "cordova-plugin-x-toast": "2.6.0",
+    "cordova-plugin-image-picker": "1.1.1"
 };
 // BOTTOM OF METADATA
 });

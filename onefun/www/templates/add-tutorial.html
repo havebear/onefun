@@ -3,31 +3,37 @@
 	  <a class="button button-icon icon iconfont icon-xuanze bgg-nav-right-icon" ng-click="submit()"></a>
 	</ion-nav-buttons>
   <ion-content>
-  	<div class="add-tutorial-addimg">
-  		<img src="../img/img.jpg" ng-click="addimg(course)"/>
+  	<div class="add-tutorial-addimg" ng-click="addimg(course)">
+  		<img class="upimg" id="fenmiantu" src="{{course.locaimg}}"/>
   	</div>
   	
   	<div class="add-tutorial-info" ng-init="order=0">
-  		<textarea rows="1" class="add-tutorial-textarea add-tutorial-textarea-title" row="2" placeholder="写下你的作品名称" ng-model="course.Course_Name"></textarea>
-            <select>
-              <option>布艺</option>
-              <option selected="">模型</option>
-              <option>剪纸</option>
-            </select>
-  		<h4>工具和材料</h3>
-  		<textarea class="add-tutorial-textarea" placeholder="所需工具和原料" ng-model="course.Material_Tool"></textarea>
+  		<div contenteditable="true" class="add-tutorial-textarea add-tutorial-textarea-title" ng-model="course.Course_Name" placeholder="请输入你的教程名称"></div>
+        <div class="add-tutorial-type">
+        	<span>类别</span>  
+	      	<select class="add-tutorial-type-select" ng-model="course.type_id">
+	          <option value="1" selected="">布艺</option>
+	          <option value="2">皮艺</option>
+	          <option value="3">纸艺</option>
+	          <option value="4">木艺</option>
+	          <option value="5">饰品</option>
+	          <option value="6">编织</option>
+	          <option value="7">模型</option>
+	          <option value="8">旧物</option>
+	        </select>
+        </div>
+        <div class="add-tutorial-type">
+        	<span>工具和材料</span>
+        </div>
+  		<div contenteditable="true" class="add-tutorial-textarea" ng-model="course.Material_Tool" placeholder="输入用到的材料和工具"></div>
   		<div class="add-tutorial-step" ng-repeat="step in course.step">
-  			<h4>
-  				第
-  				<span ng-bind="step.step_order">{{ $index + 1}}<span>
-  				步
-  			</h4>
-  			<div class="add-tutorial-addimg">
-		  		<img src="../img/img2.jpg" ng-click="addimg(course)"/>
+  			 <div class="add-tutorial-type">
+	        	<span>第{{ $index + 1}}步</span><span class="add-tutorial-right-btn" ng-click="deleteStep(step)"><i class="iconfont icon-guanbi1"></i>删除</span>
+	        </div>
+  			<div class="add-tutorial-addimg" ng-click="addimg(step)">
+		  		<img class="upimg" id="fenmiantu" src="{{step.locaimg}}"/>
 		  	</div>
-		  	<textarea class="add-tutorial-textarea" placeholder="添加步骤和说明" ng-model="step.step_describes"></textarea>
-		  	<button class="button button-assertive" ng-click="deleteStep(step)">删除步骤</button>
-  			<!--<img src=""/>-->
+		  	<div contenteditable="true" class="add-tutorial-textarea" ng-model="step.step_describes" placeholder="输入步骤描述"></div>
   		</div>
   		<button class="button button-dark button-block" ng-click="addStep()">添加一步</button>
   	</div>
