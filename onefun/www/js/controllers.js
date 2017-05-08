@@ -653,7 +653,97 @@ angular.module('starter.controllers', [])
 		}
 	})
 
-	.controller('MyTutorialDetailCtrl', function($scope, $http, $state, $stateParams, $ionicViewSwitcher, $rootScope, Userinfo, Toast) {
+	.controller('MyCollectionDetailCtrl', function($scope, $http, $state, $stateParams, $ionicViewSwitcher, $rootScope, Userinfo, Toast) {
+		//Userinfo.isLogin();
+		//$scope.url = server.url;
+
+		var apiurl = "";
+
+		init();
+
+		function init() {
+			if($rootScope.isLogin) {
+				apiurl = server.domain + "/course/getcourseinfo?course_id=" + $stateParams.id + "&token=" + Userinfo.getToken();
+			} else {
+				apiurl = server.domain + "/course/getcourseinfo?course_id=" + $stateParams.id;
+			}
+			$http.get(apiurl).then(function(response) {
+				$scope.course = response.data.data;
+				$scope.steps = response.data.data.step;
+				console.log($scope.steps);
+			});
+		};
+
+		$scope.collection = function(course) {
+			if(course.is_collection) {
+				apiurl = server.domain + "/course/delectcollection";
+			} else {
+				apiurl = server.domain + "/course/addcollection";
+			}
+			if($rootScope.isLogin) {
+				var posttext = {
+					token: Userinfo.getToken(),
+					Course_ID: $stateParams.id,
+				};
+				$http({
+					url: apiurl,
+					method: 'post',
+					data: posttext,
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(function successCallback(response) {
+					if(course.is_collection) {
+						course.is_collection = false;
+						Toast.toast("已取消收藏");
+					} else {
+						course.is_collection = true;
+						Toast.toast("已收藏");
+					}
+				}, function errorCallback(response) {
+					Toast.toast("请检查网络连接");
+				});
+			} else {
+				Toast.toast("你还没有登录");
+			}
+		}
+
+		$scope.follow = function(course) {
+			if(course.is_follow) {
+				apiurl = server.domain + "/follow/del";
+			} else {
+				apiurl = server.domain + "/follow/add";
+			}
+			if($rootScope.isLogin) {
+				var posttext = {
+					token: Userinfo.getToken(),
+					Follow_User_ID: course.author_id
+				};
+				$http({
+					url: apiurl,
+					method: 'post',
+					data: posttext,
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(function successCallback(response) {
+					if(course.is_follow) {
+						course.is_follow = false;
+						Toast.toast("已取消关注");
+					} else {
+						course.is_follow = true;
+						Toast.toast("已关注");
+					}
+				}, function errorCallback(response) {
+					Toast.toast("请检查网络连接");
+				});
+			} else {
+				Toast.toast("你还没有登录");
+			}
+		};
+	})
+
+	.controller('MyTutorialDetailCtrl', function($scope, $http, $state, $ionicPopup, $stateParams, $ionicViewSwitcher, $rootScope, $ionicHistory, Userinfo, Toast) {
 		//		Userinfo.isLogin();
 		//		$scope.url = server.url;
 		$scope.show = function() {
@@ -681,7 +771,7 @@ angular.module('starter.controllers', [])
 			$http.get(apiurl).then(function(response) {
 				$scope.course = response.data.data;
 				$scope.steps = response.data.data.step;
-				console.log($scope.steps);
+				//				console.log($scope.steps);
 			});
 		}
 
@@ -754,6 +844,44 @@ angular.module('starter.controllers', [])
 				Toast.toast("你还没有登录");
 			}
 		}
+		$scope.deletecourse = function() {
+			var confirmPopup = $ionicPopup.confirm({
+				title: '一坊',
+				template: '删除留言',
+				cancelText: '取消',
+				okText: '确定',
+				okType: 'button-dark'
+			});
+			confirmPopup.then(function(res) {
+				if(res) {
+					var apiurl = "";
+					apiurl = server.domain + "/course/deletmecourse";
+					if($rootScope.isLogin) {
+						var posttext = {
+							token: Userinfo.getToken(),
+							Course_ID: $stateParams.id,
+						};
+						$http({
+							url: apiurl,
+							method: 'post',
+							data: posttext,
+							headers: {
+								'Content-Type': 'application/json'
+							}
+						}).then(function successCallback(response) {
+							Toast.toast("删除成功");
+							$ionicHistory.goBack();
+						}, function errorCallback(response) {
+							Toast.toast("请检查网络连接");
+						});
+					} else {
+						Toast.toast("你还没有登录");
+					}
+				} else {
+					return true;
+				}
+			});
+		}
 	})
 
 	.controller('LoginCtrl', function($scope, $http, $state, $ionicHistory, $rootScope, Md5, Userinfo, Toast) {
@@ -809,19 +937,19 @@ angular.module('starter.controllers', [])
 		};
 	})
 
-	.controller('AddTutorialCtrl', function($scope, $http, $ionicPopup, $timeout, $ionicHistory, $cordovaImagePicker, $cordovaCamera,$ionicActionSheet, $cordovaFileTransfer,Userinfo, jsonToStr,Toast) {
+	.controller('AddTutorialCtrl', function($scope, $http, $ionicPopup, $timeout, $ionicHistory, $cordovaImagePicker, $cordovaCamera, $ionicActionSheet, $cordovaFileTransfer, Userinfo, jsonToStr, Toast) {
 		$scope.course = {
 			Sy_img: '',
 			Course_Name: '',
 			Material_Tool: '',
 			type_id: '1',
 			step: [{
-					step_order: '1',
+					step_order: '',
 					step_img: '',
 					step_describes: ''
 				},
 				{
-					step_order: '2',
+					step_order: '',
 					step_img: '',
 					step_describes: ''
 				},
@@ -888,10 +1016,10 @@ angular.module('starter.controllers', [])
 			$cordovaImagePicker.getPictures(options)
 				.then(function(results) {
 					$scope.images_list.push(results[0]);
-					upImage(results[0],obj);
+					upImage(results[0], obj);
 					console.log(results[0]);
 					obj.locaimg = results[0];
-//					$scope.imgurl = results[0];
+					//					$scope.imgurl = results[0];
 				}, function(error) {
 					// error getting photos
 				});
@@ -916,7 +1044,7 @@ angular.module('starter.controllers', [])
 
 				CommonJs.AlertPopup(imageData);
 				obj.locaimg = imageData;
-				upImage(imageData,obj);
+				upImage(imageData, obj);
 				//image.src = "data:image/jpeg;base64," + imageData;
 			}, function(err) {
 				// error
@@ -927,12 +1055,12 @@ angular.module('starter.controllers', [])
 
 		//图片上传upImage（图片路径）
 		//http://ngcordova.com/docs/plugins/fileTransfer/  资料地址
-		var upImage = function(imageUrl,obj) {
+		var upImage = function(imageUrl, obj) {
 			document.addEventListener('deviceready', function() {
 				var url = server.domain + "/course/doupload";
 				var options = new FileUploadOptions();
 				options.fileKey = "img";
-//				options.headers = {'Content-Type': 'application/json'};
+				//				options.headers = {'Content-Type': 'application/json'};
 				var params = {};
 				params.token = Userinfo.getToken();
 				options.params = params;
@@ -941,12 +1069,12 @@ angular.module('starter.controllers', [])
 					.then(function(result) {
 						var res = JSON.parse(result.response);
 						console.log(res.data);
-						if(obj.type_id){
+						if(obj.type_id) {
 							$scope.course.Sy_img = res.data;
-						}else{
+						} else {
 							obj.step_img = res.data;
 						}
-						
+						Toast.toast("图片上传成功");
 						$scope.images_list.splice(0, $scope.images_list.length);
 					}, function(err) {
 						console.log(err);
@@ -969,9 +1097,10 @@ angular.module('starter.controllers', [])
 				okText: '确定',
 				okType: 'button-dark'
 			});
-			
+
 			delete $scope.course.locaimg;
-			for(var i = 0;i<$scope.course.step.length;i++){
+			for(var i = 0; i < $scope.course.step.length; i++) {
+				$scope.course.step[i].step_order = i + 1;
 				delete $scope.course.step[i].locaimg;
 			}
 
@@ -984,10 +1113,12 @@ angular.module('starter.controllers', [])
 						headers: {
 							'Content-Type': 'application/json'
 						}
-					}).then(function(response) {
+					}).then(function successCallback(response) {
 						console.log($scope.course);
 						Toast.toast("教程发布成功成功");
 						$ionicHistory.goBack();
+					}, function errorCallback(response) {
+						Toast.toast("发布失败，请检查网络连接");
 					});
 				} else {
 					return true;

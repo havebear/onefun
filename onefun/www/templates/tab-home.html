@@ -85,7 +85,8 @@
 			<div class="bgg-tutorial-list-item" ng-repeat="course in courses">
 				<a href="#/tab/tutorial-detail/{{course.Course_ID}}">
 					<div class="bgg-tutorial-list-item-img">
-							<img image-lazy-src="{{url + course.Sy_Img}}" image-lazy-loader="lines"/>
+						<img image-lazy-src="{{url + course.Sy_Img}}"/>
+						<!--<img image-lazy-src="{{url + course.Sy_Img}}" image-lazy-loader="lines"/>-->
 					</div>
 					<h4>{{course.Course_Name}}</h4>
 				</a>
