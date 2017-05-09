@@ -2,9 +2,9 @@
 	<ion-nav-buttons side="right">
 	  <a class="button button-icon icon iconfont bgg-nav-right-icon" ng-class="{true: 'icon-biaoxingfill', false: 'icon-biaoxing'}[course.is_collection]" ng-click="collection(course)"></a>
 	</ion-nav-buttons>
-  <ion-content>
+  <ion-content lazy-scroll>
   	<div class="bgg-detail-title text-center">
-  		<img src="{{url + course.Sy_img}}"/>
+  		<img image-lazy-src="{{url + course.Sy_img}}"/>
   		<h3>{{course.Course_Name}}</h3>
   		<p>作者 | {{course.User_NickName}} <i class="iconfont" ng-class="{true: 'icon-xihuanfill', false: 'icon-xihuan'}[course.is_follow]" ng-click="follow(course)"></i></p>
   		<p>{{course.Material_Tool}}</p>
@@ -13,7 +13,7 @@
   		<div class="bgg-detail-buzhou" ng-repeat="step in steps">
   			<h3 class="text-center">第{{$index + 1}}步</h3>
   			<div class="">
-  				<img src="{{url + step.step_img}}"/>
+  				<img ng-if="step.step_img != ''" image-lazy-src="{{url + step.step_img}}"/>
   			</div>
   			<p>{{step.step_describes}}</p>
   		</div>

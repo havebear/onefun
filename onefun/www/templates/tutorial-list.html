@@ -1,5 +1,6 @@
 <ion-view view-title="{{pagetitle}}" hide-tabs="true">
 	<ion-content class="padding" lazy-scroll>
+		<ion-refresher pulling-text="下拉刷新" on-refresh="doRefresh()"></ion-refresher>
 		<div class="bgg-tutorial-list-box">
 			<div class="bgg-tutorial-list-item" ng-repeat="course in courses">
 				<a href="#/tab/tutorial-detail/{{course.Course_ID}}">

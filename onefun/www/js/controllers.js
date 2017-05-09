@@ -32,6 +32,10 @@ angular.module('starter.controllers', [])
 				//				$scope.hide();
 			});
 		};
+		$scope.doRefresh = function() {
+			getCourse();
+			$scope.$broadcast('scroll.refreshComplete');
+		};
 	})
 
 	.controller('MessageCtrl', function($scope, $http, $ionicLoading, $timeout, $rootScope, Userinfo, Toast) {
@@ -246,40 +250,11 @@ angular.module('starter.controllers', [])
 
 		$scope.goEL = function() {
 			if($rootScope.isLogin) {
-				$scope.openModal();
+				$state.go("tab.editname", {name: $scope.user.user_nickname});
 			} else {
 				$state.go("tab.login");
 			}
 		}
-
-		$ionicModal.fromTemplateUrl('templates/updatename.html', { // modal窗口选项
-			scope: $scope,
-			animation: 'silde-in-up'
-		}).then(function(modal) {
-			$scope.modal = modal;
-		});
-
-		$scope.openModal = function() {
-			$scope.modal.show();
-		};
-
-		$scope.closeModal = function() {
-			$scope.modal.hide();
-		};
-
-		//当我们用完模型时，清除它！
-		$scope.$on('$destroy', function() {
-			$scope.modal.remove();
-		});
-
-		// 当隐藏模型时执行动作
-		$scope.$on('modal.hide', function() {
-			// 执行动作
-		});
-		// 当移动模型时执行动作
-		$scope.$on('modal.removed', function() {
-			// 执行动作
-		});
 	})
 
 	.controller('TutorialDetailCtrl', function($scope, $http, $state, $stateParams, $ionicViewSwitcher, $rootScope, Userinfo, Toast) {
@@ -447,6 +422,10 @@ angular.module('starter.controllers', [])
 				Toast.toast("请检查你的网络连接~");
 			});
 		}
+		$scope.doRefresh = function() {
+			getCourse();
+			$scope.$broadcast('scroll.refreshComplete');
+		};
 	})
 
 	.controller('MyFollowCtrl', function($scope, $http, $rootScope, $ionicPopup, $timeout, $ionicHistory, Userinfo, Toast) {
@@ -891,8 +870,18 @@ angular.module('starter.controllers', [])
 			password: ''
 		};
 		$scope.login = function() {
-			var $this = this;
+			console.log($scope.originalpwd);
+			if($scope.formData.user_accountnumber == ''){
+				Toast.toast("账号不能为空");
+				return true;
+			}
+			if(document.getElementById("pwd").value == ""){
+				Toast.toast("密码不能为空");
+				return true;
+			}
+//			var $this = this;
 			$scope.formData.password = Md5.hex_md5($scope.originalpwd);
+			console.log($scope.originalpwd);
 			console.log($scope.formData);
 			$http({
 				url: server.domain + '/user/login',
@@ -901,20 +890,25 @@ angular.module('starter.controllers', [])
 				headers: {
 					'Content-Type': 'application/json'
 				}
-			}).then(function(response) {
-				$scope.data = response.data.data;
-				Userinfo.setToken($scope.data.token);
-				Userinfo.setId($scope.data.User_ID);
-				Userinfo.setName($scope.data.User_NiclkName);
-				$state.go("tab.personal");
-				$rootScope.isLogin = true;
-				Toast.toast("登录成功~");
-				//$ionicHistory.goBack();
-			});
+			}).then(function successCallback(response) {
+				if(response.data.status) {
+					$scope.data = response.data.data;
+					Userinfo.setToken($scope.data.token);
+					Userinfo.setId($scope.data.User_ID);
+					Userinfo.setName($scope.data.User_NiclkName);
+					$state.go("tab.personal");
+					$rootScope.isLogin = true;
+					Toast.toast("登录成功~");
+				}else{
+					Toast.toast("密码或用户名错误");
+				}
+			}, function errorCallback(response) {
+				Toast.toast("请检查你的网络连接");
+			});		
 		}
 	})
 
-	.controller('RegCtrl', function($scope, $http, Md5, $state, jsonToStr) {
+	.controller('RegCtrl', function($scope, $http, Md5, $state, jsonToStr,Toast) {
 		$scope.originalpwd = '';
 		$scope.formData = {
 			user_nickname: '',
@@ -922,6 +916,14 @@ angular.module('starter.controllers', [])
 			password: ''
 		};
 		$scope.reg = function() {
+			if($scope.formData.user_nickname == '' || $scope.formData.user_accountnumber == ''){
+				Toast.toast("昵称或账号不能为空");
+				return true;
+			}
+			if(document.getElementById("pwd2").value == ""){
+				Toast.toast("密码不能为空");
+				return true;
+			}
 			$scope.formData.password = Md5.hex_md5($scope.originalpwd);
 			console.log(jsonToStr.transform($scope.formData));
 			$http({
@@ -931,9 +933,16 @@ angular.module('starter.controllers', [])
 				headers: {
 					'Content-Type': 'application/json'
 				}
-			}).then(function(response) {
-				$state.go("tab.login");
-			});
+			}).then(function successCallback(response) {
+				if(response.data.status) {
+					$state.go("tab.login");
+					Toast.toast("注册成功，前往登录");
+				}else{
+					Toast.toast("该账号已存在");
+				}
+			}, function errorCallback(response) {
+				Toast.toast("该账号已存在");
+			});	
 		};
 	})
 
@@ -954,7 +963,7 @@ angular.module('starter.controllers', [])
 					step_describes: ''
 				},
 				{
-					step_order: '3',
+					step_order: '',
 					step_img: '',
 					step_describes: ''
 				}
@@ -1042,13 +1051,16 @@ angular.module('starter.controllers', [])
 			};
 			$cordovaCamera.getPicture(options).then(function(imageData) {
 
-				CommonJs.AlertPopup(imageData);
+//				CommonJs.AlertPopup(imageData);
+				console.log(imageData);
+//				obj.locaimg = "data:image/jpeg;base64," + imageData;
 				obj.locaimg = imageData;
+				console.log(obj.locaimg);
 				upImage(imageData, obj);
 				//image.src = "data:image/jpeg;base64," + imageData;
 			}, function(err) {
 				// error
-				CommonJs.AlertPopup(err.message);
+//				CommonJs.AlertPopup(err.message);
 			});
 
 		}
@@ -1098,14 +1110,13 @@ angular.module('starter.controllers', [])
 				okType: 'button-dark'
 			});
 
-			delete $scope.course.locaimg;
-			for(var i = 0; i < $scope.course.step.length; i++) {
-				$scope.course.step[i].step_order = i + 1;
-				delete $scope.course.step[i].locaimg;
-			}
-
 			confirmPopup.then(function(res) {
 				if(res) {
+					delete $scope.course.locaimg;
+					for(var i = 0; i < $scope.course.step.length; i++) {
+						$scope.course.step[i].step_order = i + 1;
+						delete $scope.course.step[i].locaimg;
+					}
 					$http({
 						url: server.domain + "/course/add",
 						method: 'post',
@@ -1114,9 +1125,13 @@ angular.module('starter.controllers', [])
 							'Content-Type': 'application/json'
 						}
 					}).then(function successCallback(response) {
-						console.log($scope.course);
-						Toast.toast("教程发布成功成功");
-						$ionicHistory.goBack();
+						if(response.data.status) {
+							Toast.toast("教程发布成功成功");
+							$ionicHistory.goBack();
+						} else {
+							Toast.toast("发布失败，请检查网络连接");
+						}
+
 					}, function errorCallback(response) {
 						Toast.toast("发布失败，请检查网络连接");
 					});
@@ -1150,14 +1165,57 @@ angular.module('starter.controllers', [])
 						data: $scope.message,
 						headers: {
 							'Content-Type': 'application/json'
+						},
+					}).then(function successCallback(response) {
+						if(response.data.status) {
+							Toast.toast("留言发布成功");
+							$ionicHistory.goBack();
+						} else {
+							Toast.toast("留言发布失败，请检查你的网络连接");
 						}
-					}).then(function(response) {
-						Toast.toast("留言发布成功");
-						$ionicHistory.goBack();
+					}, function errorCallback(response) {
+						Toast.toast("请检查你的网络连接");
 					});
 				} else {
 					return true;
 				}
+			});
+		}
+	})
+
+	.controller('EditNameCtrl', function($scope, $http, $stateParams, $ionicHistory, $timeout, Userinfo, Toast) {
+		$scope.message = {
+			token: Userinfo.getToken(),
+			user_nickname: $stateParams.name,
+		};
+		$scope.updatename = function() {
+			if($scope.message.user_nickname == $stateParams.name){
+				Toast.toast("昵称好像没变化");
+				return true;
+			}else if($scope.message.user_nickname == ""){
+				Toast.toast("昵称不能为空");
+				return true;
+			}else if($scope.message.user_nickname.length > 10){
+				Toast.toast("昵称长度大于10位");
+				return true;
+			}
+			$http({
+				url: server.domain + '/user/updatenickname',
+				method: 'post',
+				data: $scope.message,
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(function successCallback(response) {
+				if(response.data.status) {
+					Toast.toast("昵称成功");
+					Userinfo.setName($scope.message.user_nickname);
+					$ionicHistory.goBack();
+				} else {
+					Toast.toast("昵称已存在，请换个昵称");
+				}
+			}, function errorCallback(response) {
+				Toast.toast("请检查你的网络连接");
 			});
 		}
 	});
