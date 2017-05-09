@@ -875,13 +875,17 @@ angular.module('starter.controllers', [])
 				Toast.toast("账号不能为空");
 				return true;
 			}
+			if($scope.formData.user_accountnumber.length < 4 || $scope.formData.user_accountnumber.length >16){
+				Toast.toast("账号不能少于4位或16位");
+				return true;
+			}
 			if(document.getElementById("pwd").value == ""){
 				Toast.toast("密码不能为空");
 				return true;
 			}
 //			var $this = this;
-			$scope.formData.password = Md5.hex_md5($scope.originalpwd);
-			console.log($scope.originalpwd);
+			console.log(Md5.hex_md5(document.getElementById("pwd").value));
+			$scope.formData.password = Md5.hex_md5(document.getElementById("pwd").value);
 			console.log($scope.formData);
 			$http({
 				url: server.domain + '/user/login',
@@ -920,11 +924,19 @@ angular.module('starter.controllers', [])
 				Toast.toast("昵称或账号不能为空");
 				return true;
 			}
+			if($scope.formData.user_nickname.length < 2 || $scope.formData.user_nickname.length > 12){
+				Toast.toast("昵称不能少于2位或大于12位");
+				return true;
+			}
+			if($scope.formData.user_accountnumber.length < 4 || $scope.formData.user_accountnumber.length >16){
+				Toast.toast("账号不能少于4位或大于16位");
+				return true;
+			}
 			if(document.getElementById("pwd2").value == ""){
 				Toast.toast("密码不能为空");
 				return true;
 			}
-			$scope.formData.password = Md5.hex_md5($scope.originalpwd);
+			$scope.formData.password = Md5.hex_md5(document.getElementById("pwd2").value);
 			console.log(jsonToStr.transform($scope.formData));
 			$http({
 				url: server.domain + '/user/register',
@@ -1195,7 +1207,7 @@ angular.module('starter.controllers', [])
 			}else if($scope.message.user_nickname == ""){
 				Toast.toast("昵称不能为空");
 				return true;
-			}else if($scope.message.user_nickname.length > 10){
+			}else if($scope.message.user_nickname.length > 12){
 				Toast.toast("昵称长度大于10位");
 				return true;
 			}
