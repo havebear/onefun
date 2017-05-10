@@ -504,10 +504,10 @@ angular.module('starter.controllers', [])
 							Toast.toast("网络好像有点小问题");
 						});
 					} else {
-						Toast.toast("你还没有登录");
+						Toast.toast("网络好像有点小问题");
 					}
 				} else {
-					Toast.toast('网络好像有点小问题');
+//					Toast.toast('网络好像有点小问题');
 				}
 			});
 		};
@@ -1112,7 +1112,15 @@ angular.module('starter.controllers', [])
 		}
 
 		$scope.submit = function() {
-			console.log($scope.course);
+			if($scope.course.Course_Name == ''){
+				Toast.toast("教程名称不能为空");
+				return true;
+			}
+			if($scope.course.Material_Tool == ''){
+				Toast.toast("材料和工具不能为空");
+				return true;
+			}
+//			console.log($scope.course);
 			$scope.course.token = Userinfo.getToken();
 			var confirmPopup = $ionicPopup.confirm({
 				title: '一坊',
@@ -1124,15 +1132,17 @@ angular.module('starter.controllers', [])
 
 			confirmPopup.then(function(res) {
 				if(res) {
-					delete $scope.course.locaimg;
-					for(var i = 0; i < $scope.course.step.length; i++) {
-						$scope.course.step[i].step_order = i + 1;
-						delete $scope.course.step[i].locaimg;
+					$scope.docourse= angular.copy($scope.course);
+					delete $scope.docourse.locaimg;
+					for(var i = 0; i < $scope.docourse.step.length; i++) {
+						$scope.docourse.step[i].step_order = i + 1;
+						delete $scope.docourse.step[i].locaimg;
 					}
+					console.log($scope.docourse);
 					$http({
 						url: server.domain + "/course/add",
 						method: 'post',
-						data: $scope.course,
+						data: $scope.docourse,
 						headers: {
 							'Content-Type': 'application/json'
 						}
