@@ -24,7 +24,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 			
 			var needLoginView = ["tab.add-tutorial", "tab.my-follow", "tab.my-collection", "tab.my-message"]; //需要登录的页面state
 			$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams, options) {
-				console.log($rootScope.isLogin);
+//				console.log($rootScope.isLogin);
 				if(needLoginView.indexOf(toState.name) >= 0 && !$rootScope.isLogin) { //判断当前是否登录
 					console.log($rootScope.isLogin);
 					$state.go("tab.login"); //跳转到登录页

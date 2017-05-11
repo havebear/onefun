@@ -37,7 +37,7 @@
 .bgg-tutorial-list-item-info{height: 36px;color: #666;line-height: 36px;}
 .bgg-tutorial-list-item-info-xihuan{float: right;padding: 0 10px;padding-right: 0;}
 .bgg-tutorial-list-item-info-xihuan i{font-size: 18px;}
-.bgg-tutorial-list-item-img{height: 220px;overflow: hidden;display: -webkit-flex; /* Safari */display: flex;align-items:center;background: #CCCCCC;}
+.bgg-tutorial-list-item-img{min-height:120px;max-height: 220px;overflow: hidden;display: -webkit-flex; /* Safari */display: flex;align-items:center;background: #CCCCCC;}
 .bgg-tutorial-list-item-img img{vertical-align:middle;display:table-cell;}
 
 .bgg-message-list-box{padding: 0 10px;}
@@ -57,10 +57,10 @@
 .bgg-personal-list-item{display: block;text-decoration: none;padding-bottom: 10px;}
 .bgg-personal-list-item p{color: #666666;}
 
-.bgg-detail-title img{width: 100%;}
+.bgg-detail-title img{width: 100%;min-height: 120px;}
 .bgg-detail-title h3,.bgg-detail-title p{padding-left: 10px;padding-right: 10px;}
 .bgg-detail-box{padding: 10px;}
-.bgg-detail-buzhou img{width: 100%;}
+.bgg-detail-buzhou img{width: 100%;min-height: 120px;}
 .bgg-detail-buzhou p{font-size: 16px;line-height: 28px;}
 .bgg-personal-link{padding-top: 10px;}
 

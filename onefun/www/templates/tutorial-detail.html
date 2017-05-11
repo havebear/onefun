@@ -4,7 +4,7 @@
 	</ion-nav-buttons>
   <ion-content lazy-scroll>
   	<div class="bgg-detail-title text-center">
-  		<img image-lazy-src="{{url + course.Sy_img}}"/>
+  		<img ng-if="course.Sy_img != ''" image-lazy-src="{{url + course.Sy_img}}"/>
   		<h3>{{course.Course_Name}}</h3>
   		<p>作者 | {{course.User_NickName}} <i class="iconfont" ng-class="{true: 'icon-xihuanfill', false: 'icon-xihuan'}[course.is_follow]" ng-click="follow(course)"></i></p>
   		<p>{{course.Material_Tool}}</p>

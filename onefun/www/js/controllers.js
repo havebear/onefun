@@ -250,7 +250,9 @@ angular.module('starter.controllers', [])
 
 		$scope.goEL = function() {
 			if($rootScope.isLogin) {
-				$state.go("tab.editname", {name: $scope.user.user_nickname});
+				$state.go("tab.editname", {
+					name: $scope.user.user_nickname
+				});
 			} else {
 				$state.go("tab.login");
 			}
@@ -354,13 +356,11 @@ angular.module('starter.controllers', [])
 				template: '加载中',
 				animation: 'fade-in',
 				showBackdrop: true,
-			}).then(function() {});
+			});
 		};
 
 		$scope.hide = function() {
-			$ionicLoading.hide({
-				noBackdrop: true,
-			}).then(function() {});
+			$ionicLoading.hide();
 		};
 
 		var type = $stateParams.type || 0;
@@ -377,55 +377,100 @@ angular.module('starter.controllers', [])
 			8: "旧物"
 		};
 
-		$scope.pagetitle = types[type];
+		$scope.pagetitle = types[type];  //页面的标题
 
-		getCourse();
+		$scope.hasmore = true; //如果上啦加载无数据则隐藏掉
+		var run = false; //预防线程死锁
+		var posttext = {
+			token: Userinfo.getToken(),
+			index: 0,
+			number: 6
+		};
 
-		function getCourse() {
+		getCourse(1);
+
+		function getCourse(state) {
+			state = state || 1;
 			var apiurl = "";
 			if($rootScope.isLogin) {
 				if($stateParams.type == "hot") {
-					apiurl = server.domain + "/course/getweekhotcourse?token=" + Userinfo.getToken();
+					apiurl = server.domain + "/course/getweekhotcourse?token=" + posttext.token + "&index=" + posttext.index + "&number=" + posttext.number;
 				} else if($stateParams.type == "friend") {
-					getMyFollowCourseList();
+					getMyFollowCourseList(state);
 				} else {
-					apiurl = server.domain + "/course/getcoursetypeshow?typeid=" + $stateParams.type + "&token=" + Userinfo.getToken();
+					apiurl = server.domain + "/course/getcoursetypeshow?typeid=" + $stateParams.type + "&token=" + posttext.token + "&index=" + posttext.index + "&number=" + posttext.number;
 				}
 			} else {
 				if($stateParams.type == "hot") {
-					apiurl = server.domain + "/course/getweekhotcourse";
+					apiurl = server.domain + "/course/getweekhotcourse?index=" + posttext.index + "&number=" + posttext.number;
 				} else if($stateParams.type == "friend") {
 					alert("因为你没有登录,所以不给你看，其实是不知道怎么做，后面再想吧");
 					return true;
 				} else {
-					apiurl = server.domain + "/course/getcoursetypeshow?typeid=" + $stateParams.type;
+					apiurl = server.domain + "/course/getcoursetypeshow?typeid=" + $stateParams.type + "&index=" + posttext.index + "&number=" + posttext.number;
 				}
 			}
-			$http.get(apiurl).then(function(response) {
-				$scope.courses = response.data.data;
-			});
+			if(!run) {
+				run = true;
+				$http.get(apiurl).then(function(response) {
+					run = false;
+					if(state == 1) {
+						$scope.courses = response.data.data;
+						posttext.index = 1;
+						console.log(posttext.index);
+					} else {
+						$scope.courses = $scope.courses.concat(response.data.data);
+						if(response.data.data == null || response.data.data.length == 0) {
+							console.log("结束");
+							$scope.hasmore = false;
+						} else {
+							posttext.index++;
+						}
+					}
+				});
+			}
 		}
 
-		function getMyFollowCourseList() {
-			$http({
-				url: server.domain + "/course/getfollowcourse",
-				method: 'post',
-				data: {
-					"token": Userinfo.getToken()
-				},
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			}).then(function successCallback(response) {
-				$scope.courses = response.data.data;
-			}, function errorCallback(response) {
-				Toast.toast("请检查你的网络连接~");
-			});
+		function getMyFollowCourseList(state) {
+			if(!run) {
+				run = true;
+				$http({
+					url: server.domain + "/course/getfollowcourse",
+					method: 'post',
+					data: posttext,
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(function successCallback(response) {
+					run = false;
+					if(state == 1) {
+						$scope.courses = response.data.data;
+						posttext.index = 1;
+						console.log(posttext.index);
+					} else {
+						$scope.courses = $scope.courses.concat(response.data.data);
+						if(response.data.data == null || response.data.data.length == 0) {
+							console.log("结束");
+							$scope.hasmore = false;
+						} else {
+							posttext.index++;
+						}
+					}
+				}, function errorCallback(response) {
+					Toast.toast("请检查你的网络连接~");
+				});
+			}
 		}
 		$scope.doRefresh = function() {
-			getCourse();
+			posttext.index = 0;
+			getCourse(1);
+			$scope.hasmore = true;
 			$scope.$broadcast('scroll.refreshComplete');
 		};
+		$scope.loadMore = function() {
+			getCourse(2);
+			$scope.$broadcast('scroll.infiniteScrollComplete');
+		}
 	})
 
 	.controller('MyFollowCtrl', function($scope, $http, $rootScope, $ionicPopup, $timeout, $ionicHistory, Userinfo, Toast) {
@@ -507,7 +552,7 @@ angular.module('starter.controllers', [])
 						Toast.toast("网络好像有点小问题");
 					}
 				} else {
-//					Toast.toast('网络好像有点小问题');
+					//					Toast.toast('网络好像有点小问题');
 				}
 			});
 		};
@@ -554,7 +599,7 @@ angular.module('starter.controllers', [])
 			console.log($scope.messages.indexOf(message));
 			var confirmPopup = $ionicPopup.confirm({
 				title: '一坊',
-				template: '删除留言',
+				template: '删除动态',
 				cancelText: '取消',
 				okText: '确定',
 				okType: 'button-dark'
@@ -871,19 +916,19 @@ angular.module('starter.controllers', [])
 		};
 		$scope.login = function() {
 			console.log($scope.originalpwd);
-			if($scope.formData.user_accountnumber == ''){
+			if($scope.formData.user_accountnumber == '') {
 				Toast.toast("账号不能为空");
 				return true;
 			}
-			if($scope.formData.user_accountnumber.length < 4 || $scope.formData.user_accountnumber.length >16){
+			if($scope.formData.user_accountnumber.length < 4 || $scope.formData.user_accountnumber.length > 16) {
 				Toast.toast("账号不能少于4位或16位");
 				return true;
 			}
-			if(document.getElementById("pwd").value == ""){
+			if(document.getElementById("pwd").value == "") {
 				Toast.toast("密码不能为空");
 				return true;
 			}
-//			var $this = this;
+			//			var $this = this;
 			console.log(Md5.hex_md5(document.getElementById("pwd").value));
 			$scope.formData.password = Md5.hex_md5(document.getElementById("pwd").value);
 			console.log($scope.formData);
@@ -903,16 +948,16 @@ angular.module('starter.controllers', [])
 					$state.go("tab.personal");
 					$rootScope.isLogin = true;
 					Toast.toast("登录成功~");
-				}else{
+				} else {
 					Toast.toast("密码或用户名错误");
 				}
 			}, function errorCallback(response) {
 				Toast.toast("请检查你的网络连接");
-			});		
+			});
 		}
 	})
 
-	.controller('RegCtrl', function($scope, $http, Md5, $state, jsonToStr,Toast) {
+	.controller('RegCtrl', function($scope, $http, Md5, $state, jsonToStr, Toast) {
 		$scope.originalpwd = '';
 		$scope.formData = {
 			user_nickname: '',
@@ -920,19 +965,19 @@ angular.module('starter.controllers', [])
 			password: ''
 		};
 		$scope.reg = function() {
-			if($scope.formData.user_nickname == '' || $scope.formData.user_accountnumber == ''){
+			if($scope.formData.user_nickname == '' || $scope.formData.user_accountnumber == '') {
 				Toast.toast("昵称或账号不能为空");
 				return true;
 			}
-			if($scope.formData.user_nickname.length < 2 || $scope.formData.user_nickname.length > 12){
+			if($scope.formData.user_nickname.length < 2 || $scope.formData.user_nickname.length > 12) {
 				Toast.toast("昵称不能少于2位或大于12位");
 				return true;
 			}
-			if($scope.formData.user_accountnumber.length < 4 || $scope.formData.user_accountnumber.length >16){
+			if($scope.formData.user_accountnumber.length < 4 || $scope.formData.user_accountnumber.length > 16) {
 				Toast.toast("账号不能少于4位或大于16位");
 				return true;
 			}
-			if(document.getElementById("pwd2").value == ""){
+			if(document.getElementById("pwd2").value == "") {
 				Toast.toast("密码不能为空");
 				return true;
 			}
@@ -949,12 +994,12 @@ angular.module('starter.controllers', [])
 				if(response.data.status) {
 					$state.go("tab.login");
 					Toast.toast("注册成功，前往登录");
-				}else{
+				} else {
 					Toast.toast("该账号已存在");
 				}
 			}, function errorCallback(response) {
 				Toast.toast("该账号已存在");
-			});	
+			});
 		};
 	})
 
@@ -1063,16 +1108,16 @@ angular.module('starter.controllers', [])
 			};
 			$cordovaCamera.getPicture(options).then(function(imageData) {
 
-//				CommonJs.AlertPopup(imageData);
+				//				CommonJs.AlertPopup(imageData);
 				console.log(imageData);
-//				obj.locaimg = "data:image/jpeg;base64," + imageData;
+				//				obj.locaimg = "data:image/jpeg;base64," + imageData;
 				obj.locaimg = imageData;
 				console.log(obj.locaimg);
 				upImage(imageData, obj);
 				//image.src = "data:image/jpeg;base64," + imageData;
 			}, function(err) {
 				// error
-//				CommonJs.AlertPopup(err.message);
+				//				CommonJs.AlertPopup(err.message);
 			});
 
 		}
@@ -1112,15 +1157,15 @@ angular.module('starter.controllers', [])
 		}
 
 		$scope.submit = function() {
-			if($scope.course.Course_Name == ''){
+			if($scope.course.Course_Name == '') {
 				Toast.toast("教程名称不能为空");
 				return true;
 			}
-			if($scope.course.Material_Tool == ''){
+			if($scope.course.Material_Tool == '') {
 				Toast.toast("材料和工具不能为空");
 				return true;
 			}
-//			console.log($scope.course);
+			//			console.log($scope.course);
 			$scope.course.token = Userinfo.getToken();
 			var confirmPopup = $ionicPopup.confirm({
 				title: '一坊',
@@ -1132,7 +1177,7 @@ angular.module('starter.controllers', [])
 
 			confirmPopup.then(function(res) {
 				if(res) {
-					$scope.docourse= angular.copy($scope.course);
+					$scope.docourse = angular.copy($scope.course);
 					delete $scope.docourse.locaimg;
 					for(var i = 0; i < $scope.docourse.step.length; i++) {
 						$scope.docourse.step[i].step_order = i + 1;
@@ -1211,13 +1256,13 @@ angular.module('starter.controllers', [])
 			user_nickname: $stateParams.name,
 		};
 		$scope.updatename = function() {
-			if($scope.message.user_nickname == $stateParams.name){
+			if($scope.message.user_nickname == $stateParams.name) {
 				Toast.toast("昵称好像没变化");
 				return true;
-			}else if($scope.message.user_nickname == ""){
+			} else if($scope.message.user_nickname == "") {
 				Toast.toast("昵称不能为空");
 				return true;
-			}else if($scope.message.user_nickname.length > 12){
+			} else if($scope.message.user_nickname.length > 12) {
 				Toast.toast("昵称长度大于10位");
 				return true;
 			}

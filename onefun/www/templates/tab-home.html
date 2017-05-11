@@ -82,10 +82,10 @@
 		</div>
 		
 		<div class="bgg-tutorial-list-box">
-			<p class="text-center bgg-title-text">4月17日 星期一</p>
+			<p class="text-center bgg-title-text">最近更新</p>
 			<div class="bgg-tutorial-list-item" ng-repeat="course in courses">
 				<a href="#/tab/tutorial-detail/{{course.Course_ID}}">
-					<div class="bgg-tutorial-list-item-img">
+					<div ng-if="course.Sy_Img != ''" class="bgg-tutorial-list-item-img">
 						<img ng-if="course.Sy_Img != ''" image-lazy-src="{{url + course.Sy_Img}}"/>
 						<!--<img image-lazy-src="{{url + course.Sy_Img}}" image-lazy-loader="lines"/>-->
 					</div>
