@@ -13,6 +13,7 @@
 					</span>
 				</div> 
 			</div>
+			<div ng-if="ismore" class="text-center nomore">没有更多了</div>
 			<ion-infinite-scroll ng-if="hasmore" on-infinite="loadMore()" distance="5%"></ion-infinite-scroll>
   	</div>
   </ion-content>

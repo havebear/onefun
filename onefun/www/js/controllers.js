@@ -55,16 +55,13 @@ angular.module('starter.controllers', [])
 		};
 
 		$scope.hasmore = true;
-
+		$scope.ismore = false; //上拉加载无数据后显示
 		var run = false; //模拟线程锁机制  防止多次请求 含义：是否正在请求。请注意，此处并非加入到了就绪队列，而是直接跳过不执行
-
 		var posttext = {
 			number: 20,
 			index: 0,
 		};
-
 		var apiurl = "";
-
 		init(1);
 
 		function init(state) {
@@ -82,15 +79,13 @@ angular.module('starter.controllers', [])
 						if(response.data.data == null || response.data.data.length == 0) {
 							console.log("结束");
 							$scope.hasmore = false;
+							$scope.ismore = true;
 						} else {
 							posttext.index++;
 						}
 					} else {
 						$scope.messages = response.data.data;
 						posttext.index = 1;
-						//						if(state == 1) {
-						//							$scope.hide();
-						//						}
 					}
 				});
 			}
@@ -380,6 +375,7 @@ angular.module('starter.controllers', [])
 		$scope.pagetitle = types[type];  //页面的标题
 
 		$scope.hasmore = true; //如果上啦加载无数据则隐藏掉
+		$scope.ismore = false; //上拉加载无数据后显示
 		var run = false; //预防线程死锁
 		var posttext = {
 			token: Userinfo.getToken(),
@@ -423,6 +419,7 @@ angular.module('starter.controllers', [])
 						if(response.data.data == null || response.data.data.length == 0) {
 							console.log("结束");
 							$scope.hasmore = false;
+							$scope.ismore = true;
 						} else {
 							posttext.index++;
 						}
@@ -452,6 +449,7 @@ angular.module('starter.controllers', [])
 						if(response.data.data == null || response.data.data.length == 0) {
 							console.log("结束");
 							$scope.hasmore = false;
+							$scope.ismore = true;
 						} else {
 							posttext.index++;
 						}
